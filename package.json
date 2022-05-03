@@ -10,5 +10,9 @@
   ],
   "devDependencies": {
     "typescript": "4.4.4"
+  },
+  "scripts": {
+    "api": "yarn workspace @weroad/api",
+    "web": "yarn workspace @weroad/web"
   }
 }
