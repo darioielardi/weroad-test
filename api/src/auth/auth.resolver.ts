@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 import { CurrentUser } from './auth.decorators';
 import { AuthUser } from './auth.types';
 import { UseGqlAuthGuard } from './gql-auth.guard';
