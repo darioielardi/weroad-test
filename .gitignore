@@ -1,6 +1,5 @@
 .env
-.nuxt
-dist
+.env.*
 node_modules
 *.lock
 *.log
