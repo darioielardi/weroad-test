@@ -33,5 +33,7 @@ export class UsersSeeder extends Seeder {
       password: hashedPassword,
       roles: [editorRole],
     });
+
+    // we dont need to flush here because it's called by the seeder
   }
 }

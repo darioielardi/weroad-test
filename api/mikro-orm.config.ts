@@ -4,7 +4,7 @@ import { User } from './src/users/entities/user.entity';
 
 const options: Options = {
   entities: [User, Role],
-  dbName: 'weroad-dev',
+  dbName: process.env.NODE_ENV === 'test' ? 'weroad-test' : 'weroad-dev',
   type: 'postgresql',
 };
 

@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    container_name: weroad-dev-postgres
+    container_name: weroad-test-postgres
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=weroad-dev
+      - POSTGRES_DB=weroad-test
 
 volumes:
   db_data: ~
