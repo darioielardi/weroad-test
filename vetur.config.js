@@ -6,7 +6,7 @@ module.exports = {
   projects: [
     {
       root: './web',
-      globalComponents: ['./web/components/**/*.vue'],
+      globalComponents: ['./components/**/*.vue'],
     },
   ],
 };
