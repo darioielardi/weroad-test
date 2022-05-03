@@ -3,11 +3,11 @@
 TODO:
 
 - db w docker (compose?)
-- husky?
+- husky + lint-staged ?
 
 TO DOC:
 
-- we use a db generated id to improve DX when working with a db client
+- we use a db generated id to improve DX when working with a db client (pgcrypto instead of uuid-ossp https://www.postgresql.org/docs/12/uuid-ossp.html)
 - nuxtjs spa + static
 - auth flow (+ refresh token plans)
 
@@ -23,3 +23,9 @@ start
 
 yarn api test:setup
 yarn api test / yarn api test:e2e
+
+## To Ask
+
+- roles system
+- travel slug vs name uniqueness
+- travel moods (json vs relation vs columns)

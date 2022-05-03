@@ -6,6 +6,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { Travel } from './travels/entities/travel.entity';
+import { TravelsModule } from './travels/travels.module';
 import { Role } from './users/entities/role.entity';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
@@ -16,7 +18,7 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
     }),
     MikroOrmModule.forRoot({
-      entities: [User, Role],
+      entities: [User, Role, Travel],
       dbName: process.env.NODE_ENV === 'test' ? 'weroad-test' : 'weroad-dev',
       type: 'postgresql',
     }),
@@ -26,6 +28,7 @@ import { UsersModule } from './users/users.module';
     }),
     UsersModule,
     AuthModule,
+    TravelsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
