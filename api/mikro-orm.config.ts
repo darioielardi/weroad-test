@@ -6,6 +6,14 @@ const options: Options = {
   entities: [User, Role],
   dbName: process.env.NODE_ENV === 'test' ? 'weroad-test' : 'weroad-dev',
   type: 'postgresql',
+
+  seeder: {
+    path: 'database/seeders',
+  },
+
+  migrations: {
+    path: 'database/migrations',
+  },
 };
 
 export default options;
