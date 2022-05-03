@@ -18,3 +18,8 @@ fill .env
 setup db w docker
 migrate + seed
 start
+
+## Testing
+
+yarn api test:setup
+yarn api test / yarn api test:e2e
