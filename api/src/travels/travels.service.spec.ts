@@ -1,5 +1,5 @@
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Travel } from './entities/travel.entity';
 import { TravelsService } from './travels.service';
@@ -8,6 +8,7 @@ const mockedRepo = {
   findOne: jest.fn(),
   create: jest.fn(),
   persistAndFlush: jest.fn(),
+  removeAndFlush: jest.fn(),
 };
 
 describe('TravelsService', () => {
@@ -43,6 +44,16 @@ describe('TravelsService', () => {
           numberOfDays: 1,
         }),
       ).rejects.toThrow(ConflictException);
+    });
+  });
+
+  describe('delete travel', () => {
+    test('not found', async () => {
+      mockedRepo.findOne.mockImplementationOnce(() => null);
+
+      await expect(service.delete('abc123')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 });

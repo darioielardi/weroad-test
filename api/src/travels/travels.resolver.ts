@@ -30,8 +30,9 @@ export class TravelsResolver {
     return this.travelsService.update(input.id, input);
   }
 
-  @Mutation(() => Travel)
-  removeTravel(@Args('id', { type: () => String }) id: string) {
-    return this.travelsService.remove(id);
+  @Mutation(() => Boolean)
+  async deleteTravel(@Args('id', { type: () => String }) id: string) {
+    await this.travelsService.delete(id);
+    return true;
   }
 }

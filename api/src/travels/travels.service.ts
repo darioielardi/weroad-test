@@ -1,6 +1,10 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 import { Travel } from './entities/travel.entity';
@@ -42,7 +46,13 @@ export class TravelsService {
     return `This action updates a #${id} travel`;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} travel`;
+  async delete(id: string) {
+    const travel = await this.travelRepo.findOne(id);
+
+    if (!travel) {
+      throw new NotFoundException(`Travel with id ${id} not found`);
+    }
+
+    return this.travelRepo.removeAndFlush(travel);
   }
 }
