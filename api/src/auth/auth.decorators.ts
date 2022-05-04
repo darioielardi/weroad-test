@@ -1,4 +1,8 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  SetMetadata,
+} from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 export const CurrentUser = createParamDecorator(
@@ -7,3 +11,6 @@ export const CurrentUser = createParamDecorator(
     return ctx.getContext().req.user;
   },
 );
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
