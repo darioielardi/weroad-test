@@ -22,6 +22,6 @@ export class Tour extends BaseEntity {
   @Property({ columnType: 'int', check: 'price >= 0 AND price % 100 = 0' })
   price: number;
 
-  @ManyToOne()
+  @ManyToOne(() => Travel)
   travel: Travel;
 }

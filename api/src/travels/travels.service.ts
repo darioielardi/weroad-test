@@ -46,6 +46,10 @@ export class TravelsService {
     return this.travelRepo.findOne(id);
   }
 
+  findBySlug(slug: string) {
+    return this.travelRepo.findOne({ slug });
+  }
+
   update(id: string, input: UpdateTravelInput) {
     // TODO: if isPublic check stuff
 

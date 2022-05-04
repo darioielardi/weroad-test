@@ -1,8 +1,14 @@
+import { InputType, PartialType } from '@nestjs/graphql';
+import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CreateTravelInput } from './create-travel.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateTravelInput extends PartialType(CreateTravelInput) {
-  @Field(() => Int)
-  id: number;
+  @IsString()
+  @IsUUID()
+  id: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPublic?: boolean;
 }

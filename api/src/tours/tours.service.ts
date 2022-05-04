@@ -1,4 +1,4 @@
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityRepository, FilterQuery, QueryOrderMap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { TravelsService } from '../travels/travels.service';
 import { CreateTourInput } from './dto/create-tour.input';
+import { FindToursArgs, ToursSortBy } from './dto/find-tours.args';
 import { UpdateTourInput } from './dto/update-tour.input';
 import { Tour } from './entities/tour.entity';
 
@@ -52,8 +53,63 @@ export class ToursService {
     return tour;
   }
 
-  async findAll(): Promise<Tour[]> {
-    return [];
+  async findByTravel(
+    args: FindToursArgs,
+    publicOnly: boolean,
+  ): Promise<Tour[]> {
+    const travel = await this.travelsService.findBySlug(args.travelSlug);
+
+    if (!travel || (publicOnly && !travel.isPublic)) {
+      throw new NotFoundException(
+        `Travel with slug "${args.travelSlug}" not found`,
+      );
+    }
+
+    const where: FilterQuery<Tour> = {
+      travel,
+    };
+
+    const { dateFrom, dateTo, priceFrom, priceTo } = args;
+
+    if (dateFrom || dateTo) {
+      if (dateFrom && !dateTo) {
+        where.startingDate = { $gte: dateFrom };
+      }
+
+      if (!dateFrom && dateTo) {
+        where.endingDate = { $lte: dateTo };
+      }
+
+      if (dateFrom && dateTo) {
+        where.startingDate = { $lte: dateTo };
+        where.endingDate = { $gte: dateFrom };
+      }
+    }
+
+    if (priceFrom) {
+      where.price = { $gte: priceFrom * 100 };
+    }
+
+    if (priceTo) {
+      where.price = { $lte: priceTo * 100 };
+    }
+
+    const orderBy: QueryOrderMap<Tour> = {};
+
+    if (args.sortBy) {
+      switch (args.sortBy) {
+        case ToursSortBy.PRICE_ASC:
+          orderBy.price = 'ASC';
+          break;
+        case ToursSortBy.PRICE_DESC:
+          orderBy.price = 'DESC';
+          break;
+      }
+    } else {
+      orderBy.startingDate = 'ASC';
+    }
+
+    return this.tourRepo.find(where, { orderBy });
   }
 
   findOne(id: number) {

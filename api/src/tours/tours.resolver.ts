@@ -1,6 +1,9 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CurrentUser, Public } from '../auth/auth.decorators';
+import { AuthUser } from '../auth/auth.types';
 import { UseGqlAuthGuard } from '../auth/gql-auth.guard';
 import { CreateTourInput } from './dto/create-tour.input';
+import { FindToursArgs } from './dto/find-tours.args';
 import { UpdateTourInput } from './dto/update-tour.input';
 import { Tour } from './entities/tour.entity';
 import { ToursService } from './tours.service';
@@ -15,9 +18,13 @@ export class ToursResolver {
     return this.toursService.create(input);
   }
 
-  @Query(() => [Tour], { name: 'tours' })
-  findAll() {
-    return this.toursService.findAll();
+  @Public()
+  @Query(() => [Tour], { name: 'toursByTravel' })
+  findByTravel(
+    @Args() args: FindToursArgs,
+    @CurrentUser() user: AuthUser | null,
+  ) {
+    return this.toursService.findByTravel(args, user === null);
   }
 
   @Query(() => Tour, { name: 'tour' })

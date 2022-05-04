@@ -13,13 +13,8 @@ describe('Auth (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
 
-  test('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+    // orm.getSchemaGenerator().refreshDatabase();
   });
 
   describe('login', () => {

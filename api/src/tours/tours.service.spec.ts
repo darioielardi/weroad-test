@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
@@ -42,7 +43,7 @@ describe('ToursService', () => {
     test('invalid dates', async () => {
       await expect(
         service.create({
-          travelId: 'abc123',
+          travelId: faker.datatype.uuid(),
           name: 'test',
           startingDate: new Date('2030-02-01'),
           endingDate: new Date('2030-01-01'),
@@ -62,7 +63,7 @@ describe('ToursService', () => {
 
       await expect(
         service.create({
-          travelId: 'abc123',
+          travelId: faker.datatype.uuid(),
           name: alreadyExistingName,
           startingDate: new Date('2030-02-01'),
           endingDate: new Date('2030-03-01'),
@@ -92,7 +93,7 @@ describe('ToursService', () => {
 
       await expect(
         service.update({
-          id: 'abc123',
+          id: faker.datatype.uuid(),
           name: 'test',
           startingDate: new Date('2030-02-01'),
           endingDate: new Date('2030-03-01'),
@@ -106,7 +107,7 @@ describe('ToursService', () => {
 
       await expect(
         service.update({
-          id: 'abc123',
+          id: faker.datatype.uuid(),
           name: 'test',
           startingDate: new Date('2030-03-01'),
           endingDate: new Date('2030-02-01'),
@@ -131,7 +132,7 @@ describe('ToursService', () => {
 
       await expect(
         service.update({
-          id: 'abc123',
+          id: faker.datatype.uuid(),
           name: alreadyExistingName,
           startingDate: new Date('2030-02-01'),
           endingDate: new Date('2030-03-01'),
