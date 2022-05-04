@@ -7,5 +7,6 @@ import { TravelsService } from './travels.service';
 @Module({
   imports: [MikroOrmModule.forFeature([Travel])],
   providers: [TravelsResolver, TravelsService],
+  exports: [TravelsService],
 })
 export class TravelsModule {}

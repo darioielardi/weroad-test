@@ -1,16 +1,16 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { ToursService } from './tours.service';
-import { Tour } from './entities/tour.entity';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTourInput } from './dto/create-tour.input';
 import { UpdateTourInput } from './dto/update-tour.input';
+import { Tour } from './entities/tour.entity';
+import { ToursService } from './tours.service';
 
 @Resolver(() => Tour)
 export class ToursResolver {
   constructor(private readonly toursService: ToursService) {}
 
   @Mutation(() => Tour)
-  createTour(@Args('createTourInput') createTourInput: CreateTourInput) {
-    return this.toursService.create(createTourInput);
+  createTour(@Args('data') input: CreateTourInput) {
+    return this.toursService.create(input);
   }
 
   @Query(() => [Tour], { name: 'tours' })
@@ -24,7 +24,7 @@ export class ToursResolver {
   }
 
   @Mutation(() => Tour)
-  updateTour(@Args('updateTourInput') updateTourInput: UpdateTourInput) {
+  updateTour(@Args('data') updateTourInput: UpdateTourInput) {
     return this.toursService.update(updateTourInput.id, updateTourInput);
   }
 

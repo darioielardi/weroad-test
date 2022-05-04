@@ -26,19 +26,15 @@ describe('TravelsService', () => {
   });
 
   describe('create travel', () => {
-    const alreadyExistingSlug = 'existing-slug';
+    test('existing by slug', async () => {
+      const alreadyExistingSlug = 'existing-slug';
 
-    beforeEach(() => {
       mockedRepo.findOne.mockImplementationOnce((params: { slug: string }) => {
         if (params.slug === alreadyExistingSlug) {
           return new Travel();
         }
       });
 
-      mockedRepo.create.mockReturnValueOnce(new Travel());
-    });
-
-    test('existing by slug', async () => {
       await expect(
         service.create({
           name: 'test',
@@ -47,17 +43,6 @@ describe('TravelsService', () => {
           numberOfDays: 1,
         }),
       ).rejects.toThrow(ConflictException);
-    });
-
-    test('new travel', async () => {
-      await expect(
-        service.create({
-          name: 'test',
-          slug: 'test',
-          description: 'test',
-          numberOfDays: 1,
-        }),
-      ).resolves.toBeInstanceOf(Travel);
     });
   });
 });

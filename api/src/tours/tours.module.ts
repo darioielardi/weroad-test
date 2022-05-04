@@ -1,8 +1,12 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { ToursService } from './tours.service';
+import { TravelsModule } from '../travels/travels.module';
+import { Tour } from './entities/tour.entity';
 import { ToursResolver } from './tours.resolver';
+import { ToursService } from './tours.service';
 
 @Module({
-  providers: [ToursResolver, ToursService]
+  imports: [MikroOrmModule.forFeature([Tour]), TravelsModule],
+  providers: [ToursResolver, ToursService],
 })
 export class ToursModule {}

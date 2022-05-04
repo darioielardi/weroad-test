@@ -33,7 +33,7 @@ export class TravelsService {
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} travel`;
+    return this.travelRepo.findOne(id);
   }
 
   update(id: string, input: UpdateTravelInput) {
