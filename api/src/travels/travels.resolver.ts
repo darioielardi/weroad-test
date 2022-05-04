@@ -1,15 +1,17 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { TravelsService } from './travels.service';
-import { Travel } from './entities/travel.entity';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
+import { Travel } from './entities/travel.entity';
+import { TravelsService } from './travels.service';
 
 @Resolver(() => Travel)
 export class TravelsResolver {
   constructor(private readonly travelsService: TravelsService) {}
 
   @Mutation(() => Travel)
-  createTravel(@Args('createTravelInput') createTravelInput: CreateTravelInput) {
+  createTravel(
+    @Args('createTravelInput') createTravelInput: CreateTravelInput,
+  ) {
     return this.travelsService.create(createTravelInput);
   }
 
@@ -24,7 +26,9 @@ export class TravelsResolver {
   }
 
   @Mutation(() => Travel)
-  updateTravel(@Args('updateTravelInput') updateTravelInput: UpdateTravelInput) {
+  updateTravel(
+    @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,
+  ) {
     return this.travelsService.update(updateTravelInput.id, updateTravelInput);
   }
 

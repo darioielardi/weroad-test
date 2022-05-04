@@ -1,15 +1,12 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Entity, Property } from '@mikro-orm/core';
+import { ObjectType } from '@nestjs/graphql';
+import { BaseEntity } from '../../common/base.entity';
 
 @Entity()
 @ObjectType()
-export class Travel {
-  @Field(() => ID)
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
-  id: string;
-
-  @Property()
-  isPublic: boolean;
+export class Travel extends BaseEntity {
+  @Property({ default: false })
+  isPublic = false;
 
   @Property({ unique: true })
   slug: string;
@@ -17,7 +14,7 @@ export class Travel {
   @Property()
   name: string;
 
-  @Property()
+  @Property({ columnType: 'TEXT' })
   description: string;
 
   @Property()

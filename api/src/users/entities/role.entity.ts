@@ -1,20 +1,11 @@
-import {
-  Collection,
-  Entity,
-  ManyToMany,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Collection, Entity, ManyToMany, Property } from '@mikro-orm/core';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { BaseEntity } from '../../common/base.entity';
 import { User } from './user.entity';
 
 @Entity()
 @ObjectType()
-export class Role {
-  @Field(() => ID)
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
-  id: string;
-
+export class Role extends BaseEntity {
   @Property()
   name: string;
 
