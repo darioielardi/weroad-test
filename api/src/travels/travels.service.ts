@@ -1,4 +1,4 @@
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityRepository, FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   ConflictException,
@@ -32,8 +32,14 @@ export class TravelsService {
     return travel;
   }
 
-  findAll() {
-    return this.travelRepo.findAll();
+  findAll(params: { publicOnly?: boolean }) {
+    const where: FilterQuery<Travel> = {};
+
+    if (params.publicOnly) {
+      where.isPublic = true;
+    }
+
+    return this.travelRepo.find(where);
   }
 
   findOne(id: string) {
