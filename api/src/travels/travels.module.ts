@@ -1,8 +1,11 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { TravelsService } from './travels.service';
+import { Travel } from './entities/travel.entity';
 import { TravelsResolver } from './travels.resolver';
+import { TravelsService } from './travels.service';
 
 @Module({
-  providers: [TravelsResolver, TravelsService]
+  imports: [MikroOrmModule.forFeature([Travel])],
+  providers: [TravelsResolver, TravelsService],
 })
 export class TravelsModule {}

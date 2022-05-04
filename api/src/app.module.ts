@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import ormOptions from '../mikro-orm.config';
 import { AppController } from './app.controller';
@@ -16,11 +16,12 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MikroOrmModule.forRoot({
-      // entities: [BaseEntity, User, Role, Travel, Tour],
-      // dbName: process.env.NODE_ENV === 'test' ? 'weroad-test' : 'weroad-dev',
-      // type: 'postgresql',
-      ...ormOptions,
+    MikroOrmModule.forRootAsync({
+      useFactory: async (config: ConfigService) => ({
+        ...ormOptions,
+        clientUrl: config.get('DATABASE_URL'),
+      }),
+      inject: [ConfigService],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

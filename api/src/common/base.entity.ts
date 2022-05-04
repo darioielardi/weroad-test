@@ -1,6 +1,7 @@
 import { PrimaryKey, Property } from '@mikro-orm/core';
-import { Field, ID } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class BaseEntity {
   @Field(() => ID)
   @PrimaryKey({ columnType: 'uuid', defaultRaw: 'gen_random_uuid()' })

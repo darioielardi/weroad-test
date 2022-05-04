@@ -1,18 +1,18 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGqlAuthGuard } from '../auth/gql-auth.guard';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 import { Travel } from './entities/travel.entity';
 import { TravelsService } from './travels.service';
 
+@UseGqlAuthGuard()
 @Resolver(() => Travel)
 export class TravelsResolver {
   constructor(private readonly travelsService: TravelsService) {}
 
   @Mutation(() => Travel)
-  createTravel(
-    @Args('createTravelInput') createTravelInput: CreateTravelInput,
-  ) {
-    return this.travelsService.create(createTravelInput);
+  createTravel(@Args('data') input: CreateTravelInput) {
+    return this.travelsService.create(input);
   }
 
   @Query(() => [Travel], { name: 'travels' })
@@ -21,19 +21,17 @@ export class TravelsResolver {
   }
 
   @Query(() => Travel, { name: 'travel' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.travelsService.findOne(id);
   }
 
   @Mutation(() => Travel)
-  updateTravel(
-    @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,
-  ) {
-    return this.travelsService.update(updateTravelInput.id, updateTravelInput);
+  updateTravel(@Args('data') input: UpdateTravelInput) {
+    return this.travelsService.update(input.id, input);
   }
 
   @Mutation(() => Travel)
-  removeTravel(@Args('id', { type: () => Int }) id: number) {
+  removeTravel(@Args('id', { type: () => String }) id: string) {
     return this.travelsService.remove(id);
   }
 }
