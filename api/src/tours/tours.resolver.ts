@@ -26,8 +26,8 @@ export class ToursResolver {
   }
 
   @Mutation(() => Tour)
-  updateTour(@Args('data') updateTourInput: UpdateTourInput) {
-    return this.toursService.update(updateTourInput.id, updateTourInput);
+  updateTour(@Args('data') input: UpdateTourInput) {
+    return this.toursService.update(input);
   }
 
   @Mutation(() => Tour)

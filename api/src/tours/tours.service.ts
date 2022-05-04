@@ -20,9 +20,13 @@ export class ToursService {
   ) {}
 
   async create(input: CreateTourInput) {
+    // validate dates
+
     if (input.startingDate >= input.endingDate) {
       throw new BadRequestException('Invalid dates');
     }
+
+    // validate name
 
     const existingByName = await this.tourRepo.findOne({
       name: input.name,
@@ -37,6 +41,8 @@ export class ToursService {
     if (!travel) {
       throw new NotFoundException(`Travel with id ${input.travelId} not found`);
     }
+
+    // create and save
 
     const tour = this.tourRepo.create(input);
     tour.travel = travel;
@@ -54,8 +60,51 @@ export class ToursService {
     return `This action returns a #${id} tour`;
   }
 
-  update(id: number, input: UpdateTourInput) {
-    return `This action updates a #${id} tour`;
+  async update(input: UpdateTourInput) {
+    const tour = await this.tourRepo.findOne(input.id);
+
+    if (!tour) {
+      throw new NotFoundException(`Tour with id ${input.id} not found`);
+    }
+
+    // validate & set dates
+
+    const finalStartingDate = input.startingDate || tour.startingDate;
+    const finalEndingDate = input.endingDate || tour.endingDate;
+
+    if (finalStartingDate >= finalEndingDate) {
+      throw new BadRequestException('Invalid dates');
+    }
+
+    tour.startingDate = finalStartingDate;
+    tour.endingDate = finalEndingDate;
+
+    // validate & set name
+
+    if (input.name) {
+      const existingByName = await this.tourRepo.findOne({
+        name: input.name,
+        id: { $not: input.id },
+      });
+
+      if (existingByName) {
+        throw new ConflictException('A tour with this name already exists');
+      }
+
+      tour.name = input.name;
+    }
+
+    // set price
+
+    if (typeof input.price !== 'undefined') {
+      tour.price = input.price;
+    }
+
+    // and finally save
+
+    await this.tourRepo.persistAndFlush(tour);
+
+    return tour;
   }
 
   remove(id: number) {
