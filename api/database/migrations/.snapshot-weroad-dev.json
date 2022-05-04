@@ -152,6 +152,136 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "starting_date": {
+          "name": "starting_date",
+          "type": "date",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "date"
+        },
+        "ending_date": {
+          "name": "ending_date",
+          "type": "date",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "date"
+        },
+        "price": {
+          "name": "price",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "travel_id": {
+          "name": "travel_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "tour",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "keyName": "tour_name_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "tour_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "tour_price_check",
+          "expression": "price >= 0 AND price % 100 = 0",
+          "definition": "check ((price >= 0 AND price % 100 = 0))",
+          "columnName": "price"
+        },
+        {
+          "name": "tour_dates_check",
+          "expression": "starting_date < ending_date",
+          "definition": "check ((starting_date < ending_date))"
+        }
+      ],
+      "foreignKeys": {
+        "tour_travel_id_foreign": {
+          "constraintName": "tour_travel_id_foreign",
+          "columnNames": [
+            "travel_id"
+          ],
+          "localTableName": "public.tour",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.travel",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "CURRENT_TIMESTAMP",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "CURRENT_TIMESTAMP",
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         }
       },
       "name": "role",

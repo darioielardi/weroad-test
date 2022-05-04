@@ -1,12 +1,13 @@
-import { Entity, Property } from '@mikro-orm/core';
+import { Collection, Entity, OneToMany, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../common/base.entity';
+import { Tour } from '../../tours/entities/tour.entity';
 
 @Entity()
 @ObjectType()
 export class Travel extends BaseEntity {
   @Property({ default: false })
-  isPublic = false;
+  isPublic: boolean = false;
 
   @Property({ unique: true })
   slug: string;
@@ -24,4 +25,7 @@ export class Travel extends BaseEntity {
   get numberOfNights() {
     return this.numberOfDays - 1;
   }
+
+  @OneToMany(() => Tour, (tour) => tour.travel)
+  tours = new Collection<Tour>(this);
 }

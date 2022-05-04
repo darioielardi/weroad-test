@@ -3,14 +3,12 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import ormOptions from '../mikro-orm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { BaseEntity } from './common/base.entity';
-import { Travel } from './travels/entities/travel.entity';
+import { ToursModule } from './tours/tours.module';
 import { TravelsModule } from './travels/travels.module';
-import { Role } from './users/entities/role.entity';
-import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -19,9 +17,10 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
     }),
     MikroOrmModule.forRoot({
-      entities: [BaseEntity, User, Role, Travel],
-      dbName: process.env.NODE_ENV === 'test' ? 'weroad-test' : 'weroad-dev',
-      type: 'postgresql',
+      // entities: [BaseEntity, User, Role, Travel, Tour],
+      // dbName: process.env.NODE_ENV === 'test' ? 'weroad-test' : 'weroad-dev',
+      // type: 'postgresql',
+      ...ormOptions,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -30,6 +29,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     AuthModule,
     TravelsModule,
+    ToursModule,
   ],
   controllers: [AppController],
   providers: [AppService],
