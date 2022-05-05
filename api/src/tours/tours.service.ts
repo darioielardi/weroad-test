@@ -40,7 +40,9 @@ export class ToursService {
     const travel = await this.travelsService.findOne(input.travelId);
 
     if (!travel) {
-      throw new NotFoundException(`Travel with id ${input.travelId} not found`);
+      throw new NotFoundException(
+        `Travel with id "${input.travelId}" not found`,
+      );
     }
 
     // create and save
