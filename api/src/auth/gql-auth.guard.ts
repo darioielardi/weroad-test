@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable, UseGuards } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -9,5 +9,3 @@ export class GqlAuthGuard extends JwtAuthGuard {
     return ctx.getContext().req;
   }
 }
-
-export const UseGqlAuthGuard = () => UseGuards(GqlAuthGuard);

@@ -1,9 +1,14 @@
 import {
+  applyDecorators,
   createParamDecorator,
   ExecutionContext,
   SetMetadata,
+  UseGuards,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { IS_PUBLIC_KEY } from './auth.constants';
+import { GqlAuthGuard } from './gql-auth.guard';
+import { GqlRolesGuard } from './roles.guard';
 
 export const CurrentUser = createParamDecorator(
   (_: unknown, context: ExecutionContext) => {
@@ -12,5 +17,8 @@ export const CurrentUser = createParamDecorator(
   },
 );
 
-export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+
+export function Auth() {
+  return applyDecorators(UseGuards(GqlAuthGuard, GqlRolesGuard));
+}

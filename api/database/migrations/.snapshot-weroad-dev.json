@@ -68,7 +68,7 @@
         },
         "description": {
           "name": "description",
-          "type": "TEXT",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
@@ -107,7 +107,14 @@
           "unique": true
         }
       ],
-      "checks": [],
+      "checks": [
+        {
+          "name": "travel_number_of_days_check",
+          "expression": "number_of_days >= 0",
+          "definition": "check ((number_of_days >= 0))",
+          "columnName": "number_of_days"
+        }
+      ],
       "foreignKeys": {}
     },
     {
@@ -274,66 +281,6 @@
           "default": "CURRENT_TIMESTAMP",
           "mappedType": "datetime"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        }
-      },
-      "name": "role",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "role_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "default": "CURRENT_TIMESTAMP",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "default": "CURRENT_TIMESTAMP",
-          "mappedType": "datetime"
-        },
         "email": {
           "name": "email",
           "type": "varchar(255)",
@@ -351,6 +298,19 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "enumItems": [
+            "editor",
+            "admin"
+          ],
+          "mappedType": "enum"
         }
       },
       "name": "user",
@@ -377,71 +337,6 @@
       ],
       "checks": [],
       "foreignKeys": {}
-    },
-    {
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "role_id": {
-          "name": "role_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "user_roles",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "user_roles_pkey",
-          "columnNames": [
-            "user_id",
-            "role_id"
-          ],
-          "composite": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "user_roles_user_id_foreign": {
-          "constraintName": "user_roles_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.user_roles",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
-        "user_roles_role_id_foreign": {
-          "constraintName": "user_roles_role_id_foreign",
-          "columnNames": [
-            "role_id"
-          ],
-          "localTableName": "public.user_roles",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.role",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      }
     }
   ]
 }
