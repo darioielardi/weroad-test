@@ -1,8 +1,15 @@
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -39,31 +46,25 @@ export type Mutation = {
   updateTravel: Travel;
 };
 
-
 export type MutationCreateTourArgs = {
   data: CreateTourInput;
 };
-
 
 export type MutationCreateTravelArgs = {
   data: CreateTravelInput;
 };
 
-
 export type MutationDeleteTravelArgs = {
   id: Scalars['String'];
 };
-
 
 export type MutationRemoveTourArgs = {
   id: Scalars['Int'];
 };
 
-
 export type MutationUpdateTourArgs = {
   data: UpdateTourInput;
 };
-
 
 export type MutationUpdateTravelArgs = {
   data: UpdateTravelInput;
@@ -90,11 +91,9 @@ export type Query = {
   travels: PaginatedTravels;
 };
 
-
 export type QueryTourArgs = {
   id: Scalars['Int'];
 };
-
 
 export type QueryToursByTravelArgs = {
   dateFrom?: InputMaybe<Scalars['DateTime']>;
@@ -107,11 +106,9 @@ export type QueryToursByTravelArgs = {
   travelSlug: Scalars['String'];
 };
 
-
 export type QueryTravelArgs = {
   id: Scalars['String'];
 };
-
 
 export type QueryTravelsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -120,7 +117,7 @@ export type QueryTravelsArgs = {
 
 export enum Role {
   Admin = 'ADMIN',
-  Editor = 'EDITOR'
+  Editor = 'EDITOR',
 }
 
 export type Tour = {
@@ -137,7 +134,7 @@ export type Tour = {
 
 export enum ToursSortBy {
   PriceAsc = 'PRICE_ASC',
-  PriceDesc = 'PRICE_DESC'
+  PriceDesc = 'PRICE_DESC',
 }
 
 export type Travel = {
@@ -180,9 +177,105 @@ export type User = {
 };
 
 export type TravelsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
 }>;
 
+export type TravelsQuery = {
+  __typename?: 'Query';
+  travels: {
+    __typename?: 'PaginatedTravels';
+    hasMore: boolean;
+    items: Array<{
+      __typename?: 'Travel';
+      id: string;
+      name: string;
+      slug: string;
+      isPublic: boolean;
+    }>;
+  };
+};
 
-export type TravelsQuery = { __typename?: 'Query', travels: { __typename?: 'PaginatedTravels', hasMore: boolean, items: Array<{ __typename?: 'Travel', id: string, name: string, slug: string, isPublic: boolean }> } };
+export const TravelsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Travels' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'travels' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'isPublic' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'hasMore' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TravelsQuery, TravelsQueryVariables>;

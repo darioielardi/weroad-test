@@ -58,8 +58,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { gql } from 'graphql-tag';
-import { PaginatedTravels, TravelsQuery } from '~/graphql/generated';
+import Component from 'vue-class-component';
+import {
+  TravelsDocument,
+  TravelsQuery,
+  TravelsQueryVariables,
+} from '~/graphql/generated';
 
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -69,48 +73,30 @@ const navigation = [
   { name: 'Reports', href: '#', current: false },
 ];
 
-export default Vue.extend({
-  name: 'IndexPage',
-
-  data() {
-    return {
-      navigation,
-      travels: [],
-    };
-  },
+@Component
+export default class IndexPage extends Vue {
+  navigation = navigation;
+  isLoading = false;
+  travels: TravelsQuery['travels']['items'] | null = null;
 
   async mounted() {
-    const res: TravelsQuery = await this.$graphql.default.request(
-      gql`
-        query Travels($limit: Int, $offset: Int) {
-          travels(limit: $limit, offset: $offset) {
-            items {
-              id
-              name
-              slug
-              isPublic
-            }
-            hasMore
-          }
-        }
-      `,
-      {
-        limit: 10,
-        offset: 0,
-      }
-    );
+    const res = await this.$graphql.default.request<
+      TravelsQuery,
+      TravelsQueryVariables
+    >(TravelsDocument, {
+      limit: 10,
+      offset: 0,
+    });
 
-    console.log(res.travels.items);
-  },
+    this.travels = res.travels.items;
+  }
 
-  methods: {
-    async onLogout() {
-      try {
-        await this.$auth.logout();
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  },
-});
+  async onLogout() {
+    try {
+      await this.$auth.logout();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
 </script>

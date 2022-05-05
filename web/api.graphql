@@ -1,4 +1,4 @@
-query Travels($limit: Int, $offset: Int) {
+query Travels($limit: Int!, $offset: Int!) {
   travels(limit: $limit, offset: $offset) {
     items {
       id
