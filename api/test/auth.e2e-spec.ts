@@ -70,6 +70,11 @@ describe('Auth (e2e)', () => {
         .expect(201);
 
       expect(res.body).toHaveProperty('access_token');
+      // expect(res.body).toHaveProperty('refresh_token');
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user).toHaveProperty('id');
+      expect(res.body.user.email).toBe(email);
+      expect(res.body.user.role).toBe(Role.ADMIN);
     });
   });
 
