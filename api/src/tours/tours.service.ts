@@ -122,7 +122,7 @@ export class ToursService {
     const tour = await this.tourRepo.findOne(input.id);
 
     if (!tour) {
-      throw new NotFoundException(`Tour with id ${input.id} not found`);
+      throw new NotFoundException(`Tour with id "${input.id}" not found`);
     }
 
     // validate & set dates
@@ -142,10 +142,9 @@ export class ToursService {
     if (input.name) {
       const existingByName = await this.tourRepo.findOne({
         name: input.name,
-        id: { $not: input.id },
       });
 
-      if (existingByName) {
+      if (existingByName && existingByName.id !== tour.id) {
         throw new ConflictException('A tour with this name already exists');
       }
 

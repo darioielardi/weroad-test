@@ -8,7 +8,7 @@ import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
 import { AppModule } from './../../src/app.module';
 
-describe('Tours (e2e)', () => {
+describe('Find Tours (e2e)', () => {
   let app: INestApplication;
   let toursRepo: EntityRepository<Tour>;
   let travelsRepo: EntityRepository<Travel>;

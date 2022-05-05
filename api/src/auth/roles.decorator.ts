@@ -5,4 +5,4 @@ import { ROLES_KEY } from './auth.constants';
 export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
 
 export const Admin = () => Roles(Role.ADMIN);
-export const Editor = () => Roles(Role.EDITOR);
+export const Editor = () => Roles(Role.ADMIN, Role.EDITOR);

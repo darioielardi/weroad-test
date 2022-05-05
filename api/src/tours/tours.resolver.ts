@@ -1,7 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
-import { Admin } from '../auth/roles.decorator';
+import { Admin, Editor } from '../auth/roles.decorator';
 import { CreateTourInput } from './dto/create-tour.input';
 import { FindToursArgs } from './dto/find-tours.args';
 import { UpdateTourInput } from './dto/update-tour.input';
@@ -33,6 +33,7 @@ export class ToursResolver {
     return this.toursService.findOne(id);
   }
 
+  @Editor()
   @Mutation(() => Tour)
   updateTour(@Args('data') input: UpdateTourInput) {
     return this.toursService.update(input);
