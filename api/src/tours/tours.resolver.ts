@@ -3,7 +3,7 @@ import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
 import { Admin, Editor } from '../auth/roles.decorator';
 import { CreateTourInput } from './dto/create-tour.input';
-import { FindToursArgs } from './dto/find-tours.args';
+import { FindToursArgs, PaginatedTours } from './dto/find-tours.args';
 import { UpdateTourInput } from './dto/update-tour.input';
 import { Tour } from './entities/tour.entity';
 import { ToursService } from './tours.service';
@@ -20,7 +20,7 @@ export class ToursResolver {
   }
 
   @Public()
-  @Query(() => [Tour], { name: 'toursByTravel' })
+  @Query(() => PaginatedTours, { name: 'toursByTravel' })
   findByTravel(
     @Args() args: FindToursArgs,
     @CurrentUser() user: AuthUser | null,

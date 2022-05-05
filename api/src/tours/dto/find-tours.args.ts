@@ -1,8 +1,16 @@
-import { ArgsType, Field, Int, registerEnumType } from '@nestjs/graphql';
-import { IsDate, IsInt, IsNumber, IsOptional, Max } from 'class-validator';
+import {
+  ArgsType,
+  Field,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { IsDate, IsInt, IsNumber, IsOptional } from 'class-validator';
+import { Paginated, PaginationArgs } from '../../common/pagination.args';
+import { Tour } from '../entities/tour.entity';
 
 @ArgsType()
-export class FindToursArgs {
+export class FindToursArgs extends PaginationArgs {
   travelSlug: string;
 
   // filters
@@ -30,19 +38,6 @@ export class FindToursArgs {
   // sort by
 
   sortBy?: ToursSortBy;
-
-  // pagination
-
-  @Field(() => Int, { nullable: true })
-  @IsNumber()
-  @IsInt()
-  @Max(100)
-  limit: number;
-
-  @Field(() => Int, { nullable: true })
-  @IsNumber()
-  @IsInt()
-  offset: number;
 }
 
 export enum ToursSortBy {
@@ -53,3 +48,8 @@ export enum ToursSortBy {
 registerEnumType(ToursSortBy, {
   name: 'ToursSortBy',
 });
+
+// response type
+
+@ObjectType()
+export class PaginatedTours extends Paginated(Tour) {}

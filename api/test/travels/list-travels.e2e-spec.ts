@@ -58,16 +58,18 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels {
-                id
+              travels(limit: 100, offset: 0) {
+                items {
+                  id
+                }
               }
             }
           `,
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.travels).toHaveLength(1);
-        expect(res.body.data.travels[0].id).toBe(publicTravelId);
+        expect(res.body.data.travels.items).toHaveLength(1);
+        expect(res.body.data.travels.items[0].id).toBe(publicTravelId);
       });
   });
 
@@ -105,15 +107,17 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels {
-                id
+              travels(limit: 100, offset: 0) {
+                items {
+                  id
+                }
               }
             }
           `,
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.travels).toHaveLength(2);
+        expect(res.body.data.travels.items).toHaveLength(2);
       });
   });
 
@@ -141,10 +145,12 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels {
-                id
-                tours {
+              travels(limit: 100, offset: 0) {
+                items {
                   id
+                  tours {
+                    id
+                  }
                 }
               }
             }
@@ -152,9 +158,9 @@ describe('List Travel (e2e)', () => {
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.travels).toHaveLength(1);
-        expect(res.body.data.travels[0].tours).toHaveLength(1);
-        expect(res.body.data.travels[0].tours[0].id).toBe(tourId);
+        expect(res.body.data.travels.items).toHaveLength(1);
+        expect(res.body.data.travels.items[0].tours).toHaveLength(1);
+        expect(res.body.data.travels.items[0].tours[0].id).toBe(tourId);
       });
   });
 

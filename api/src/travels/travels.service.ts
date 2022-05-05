@@ -5,7 +5,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PaginationArgs } from '../common/pagination.args';
 import { CreateTravelInput } from './dto/create-travel.input';
+import { PaginatedTravels } from './dto/list-travels.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 import { Travel } from './entities/travel.entity';
 
@@ -32,16 +34,24 @@ export class TravelsService {
     return travel;
   }
 
-  findAll(params: { publicOnly?: boolean }) {
+  async findAll(
+    params: { publicOnly?: boolean } & PaginationArgs,
+  ): Promise<PaginatedTravels> {
     const where: FilterQuery<Travel> = {};
 
     if (params.publicOnly) {
       where.isPublic = true;
     }
 
-    return this.travelRepo.find(where, {
+    const [items, count] = await this.travelRepo.findAndCount(where, {
       populate: ['tours'],
+      ...params,
     });
+
+    return {
+      items,
+      hasMore: count > params.offset + params.limit,
+    };
   }
 
   findOne(id: string) {

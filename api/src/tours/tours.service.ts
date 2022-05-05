@@ -8,7 +8,11 @@ import {
 } from '@nestjs/common';
 import { TravelsService } from '../travels/travels.service';
 import { CreateTourInput } from './dto/create-tour.input';
-import { FindToursArgs, ToursSortBy } from './dto/find-tours.args';
+import {
+  FindToursArgs,
+  PaginatedTours,
+  ToursSortBy,
+} from './dto/find-tours.args';
 import { UpdateTourInput } from './dto/update-tour.input';
 import { Tour } from './entities/tour.entity';
 
@@ -58,7 +62,7 @@ export class ToursService {
   async findByTravel(
     args: FindToursArgs,
     publicOnly: boolean,
-  ): Promise<Tour[]> {
+  ): Promise<PaginatedTours> {
     const travel = await this.travelsService.findBySlug(args.travelSlug);
 
     if (!travel || (publicOnly && !travel.isPublic)) {
@@ -111,7 +115,16 @@ export class ToursService {
       orderBy.startingDate = 'ASC';
     }
 
-    return this.tourRepo.find(where, { orderBy });
+    const [items, count] = await this.tourRepo.findAndCount(where, {
+      orderBy,
+      limit: args.limit,
+      offset: args.offset,
+    });
+
+    return {
+      items,
+      hasMore: count > args.offset + args.limit,
+    };
   }
 
   findOne(id: number) {

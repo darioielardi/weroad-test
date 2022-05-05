@@ -35,7 +35,9 @@ describe('Find Tours (e2e)', () => {
           query: `
             query {
               toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0) {
-                id
+                items {
+                  id
+                }
               }
             }
           `,
@@ -66,7 +68,9 @@ describe('Find Tours (e2e)', () => {
           query: `
             query {
               toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0) {
-                id
+                items {
+                  id
+                }
               }
             }
           `,
@@ -115,16 +119,18 @@ describe('Find Tours (e2e)', () => {
           query: `
             query {
               toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0) {
-                id
+                items {
+                  id
+                }
               }
             }
           `,
         })
         .expect(200)
         .expect((res) => {
-          expect(res.body.data.toursByTravel).toHaveLength(2);
-          expect(res.body.data.toursByTravel[0].id).toBe(toursIds[0]);
-          expect(res.body.data.toursByTravel[1].id).toBe(toursIds[1]);
+          expect(res.body.data.toursByTravel.items).toHaveLength(2);
+          expect(res.body.data.toursByTravel.items[0].id).toBe(toursIds[0]);
+          expect(res.body.data.toursByTravel.items[1].id).toBe(toursIds[1]);
         });
     });
 
@@ -162,15 +168,17 @@ describe('Find Tours (e2e)', () => {
           query: `
             query {
               toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0, priceFrom: 500, priceTo: 1500) {
-                id
+                items {
+                  id
+                }
               }
             }
           `,
         })
         .expect(200)
         .expect((res) => {
-          expect(res.body.data.toursByTravel).toHaveLength(1);
-          expect(res.body.data.toursByTravel[0].id).toBe(toursIds[0]);
+          expect(res.body.data.toursByTravel.items).toHaveLength(1);
+          expect(res.body.data.toursByTravel.items[0].id).toBe(toursIds[0]);
         });
     });
 
@@ -208,15 +216,17 @@ describe('Find Tours (e2e)', () => {
           query: `
             query {
               toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0, dateFrom: "2030-01-15", dateTo: "2030-03-10") {
-                id
+                items {
+                  id
+                }
               }
             }
           `,
         })
         .expect(200)
         .expect((res) => {
-          expect(res.body.data.toursByTravel).toHaveLength(1);
-          expect(res.body.data.toursByTravel[0].id).toBe(toursIds[0]);
+          expect(res.body.data.toursByTravel.items).toHaveLength(1);
+          expect(res.body.data.toursByTravel.items[0].id).toBe(toursIds[0]);
         });
     });
 
@@ -254,16 +264,18 @@ describe('Find Tours (e2e)', () => {
           query: `
             query {
               toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0, sortBy: PRICE_ASC) {
-                id
+                items {
+                  id
+                }
               }
             }
           `,
         })
         .expect(200)
         .expect((res) => {
-          expect(res.body.data.toursByTravel).toHaveLength(2);
-          expect(res.body.data.toursByTravel[0].id).toBe(toursIds[1]);
-          expect(res.body.data.toursByTravel[1].id).toBe(toursIds[0]);
+          expect(res.body.data.toursByTravel.items).toHaveLength(2);
+          expect(res.body.data.toursByTravel.items[0].id).toBe(toursIds[1]);
+          expect(res.body.data.toursByTravel.items[1].id).toBe(toursIds[0]);
         });
     });
   });
