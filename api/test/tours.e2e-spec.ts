@@ -73,6 +73,7 @@ describe('Tours (e2e)', () => {
         })
         .expect(200)
         .expect((res) => {
+          expect(res.body.data).toBeNull();
           expect(res.body.errors[0].extensions.code).toBe('404');
           expect(res.body.errors[0].message).toBe(
             `Travel with slug "${slug}" not found`,

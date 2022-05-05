@@ -1,14 +1,13 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CurrentUser, Public } from '../auth/auth.decorators';
+import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
-import { UseGqlAuthGuard } from '../auth/gql-auth.guard';
 import { CreateTourInput } from './dto/create-tour.input';
 import { FindToursArgs } from './dto/find-tours.args';
 import { UpdateTourInput } from './dto/update-tour.input';
 import { Tour } from './entities/tour.entity';
 import { ToursService } from './tours.service';
 
-@UseGqlAuthGuard()
+@Auth()
 @Resolver(() => Tour)
 export class ToursResolver {
   constructor(private readonly toursService: ToursService) {}
