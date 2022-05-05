@@ -10,7 +10,7 @@ import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
 import { Role, User } from '../../src/users/entities/user.entity';
 
-describe('Delete Travel (e2e)', () => {
+describe('List Travel (e2e)', () => {
   let app: INestApplication;
   let orm: MikroORM;
   let usersRepo: EntityRepository<User>;
