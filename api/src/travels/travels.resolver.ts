@@ -12,6 +12,7 @@ import { TravelsService } from './travels.service';
 export class TravelsResolver {
   constructor(private readonly travelsService: TravelsService) {}
 
+  @Admin()
   @Mutation(() => Travel)
   createTravel(@Args('data') input: CreateTravelInput) {
     return this.travelsService.create(input);
