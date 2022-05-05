@@ -12,6 +12,10 @@ const config: NuxtConfig = {
     title: 'web',
     htmlAttrs: {
       lang: 'en',
+      class: 'h-full bg-gray-50',
+    },
+    bodyAttrs: {
+      class: 'h-full',
     },
     meta: [
       { charset: 'utf-8' },
@@ -36,10 +40,12 @@ const config: NuxtConfig = {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts',
+    'nuxt-graphql-request',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
@@ -51,6 +57,47 @@ const config: NuxtConfig = {
   },
 
   modulesDir: ['../node_modules'],
+
+  router: {
+    middleware: ['auth'],
+  },
+
+  axios: {
+    baseURL: 'http://localhost:3001',
+  },
+
+  graphql: {
+    clients: {
+      default: {
+        endpoint: 'http://localhost:3001/graphql',
+      },
+    },
+    options: {},
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'access_token',
+        },
+        user: {
+          property: false,
+        },
+        endpoints: {
+          login: { url: '/auth/login', method: 'post' },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/auth/user', method: 'get' },
+        },
+      },
+    },
+  },
+
+  googleFonts: {
+    families: {
+      Inter: true,
+    },
+  },
 };
 
 export default config;
