@@ -1,10 +1,16 @@
+import faker from '@faker-js/faker';
+import { EntityRepository } from '@mikro-orm/core';
+import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import bcrypt from 'bcrypt';
 import request from 'supertest';
+import { Role, User } from '../src/users/entities/user.entity';
 import { AppModule } from './../src/app.module';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;
+  let usersRepo: EntityRepository<User>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,7 +20,7 @@ describe('Auth (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    // orm.getSchemaGenerator().refreshDatabase();
+    usersRepo = app.get(getRepositoryToken(User));
   });
 
   describe('login', () => {
@@ -33,16 +39,34 @@ describe('Auth (e2e)', () => {
     });
 
     test('wrong password', async () => {
+      const email = faker.internet.email();
+
+      await usersRepo.nativeInsert({
+        email,
+        password: '123456',
+        role: Role.ADMIN,
+      });
+
       return request(app.getHttpServer())
         .post('/auth/login')
-        .send({ email: 'admin1@test.com', password: 'wrong' })
+        .send({ email, password: 'wrong' })
         .expect(401);
     });
 
     test('success', async () => {
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await usersRepo.nativeInsert({
+        email,
+        password: hashedPassword,
+        role: Role.ADMIN,
+      });
+
       const res = await request(app.getHttpServer())
         .post('/auth/login')
-        .send({ email: 'admin1@test.com', password: 'password' })
+        .send({ email, password })
         .expect(201);
 
       expect(res.body).toHaveProperty('access_token');
