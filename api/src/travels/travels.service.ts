@@ -39,7 +39,9 @@ export class TravelsService {
       where.isPublic = true;
     }
 
-    return this.travelRepo.find(where);
+    return this.travelRepo.find(where, {
+      populate: ['tours'],
+    });
   }
 
   findOne(id: string) {

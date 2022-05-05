@@ -4,6 +4,7 @@ TODO:
 
 - db w docker (compose?)
 - husky + lint-staged ?
+- remove unnecessary endpoints
 
 TO DOC:
 
