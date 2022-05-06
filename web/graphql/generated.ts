@@ -12,7 +12,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: any;
+  DateTime: string;
 };
 
 export type CreateTourInput = {
@@ -93,7 +93,7 @@ export type Query = {
 
 
 export type QueryTourArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 
@@ -216,6 +216,36 @@ export type DeleteTravelMutationVariables = Exact<{
 
 export type DeleteTravelMutation = { __typename?: 'Mutation', deleteTravel: boolean };
 
+export type ToursByTravelQueryVariables = Exact<{
+  travelSlug: Scalars['String'];
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+}>;
+
+
+export type ToursByTravelQuery = { __typename?: 'Query', toursByTravel: { __typename?: 'PaginatedTours', hasMore: boolean, items: Array<{ __typename?: 'Tour', id: string, name: string, startingDate: string, endingDate: string, price: number }> } };
+
+export type TourQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type TourQuery = { __typename?: 'Query', tour: { __typename?: 'Tour', id: string, name: string, startingDate: string, endingDate: string, price: number } };
+
+export type CreateTourMutationVariables = Exact<{
+  data: CreateTourInput;
+}>;
+
+
+export type CreateTourMutation = { __typename?: 'Mutation', createTour: { __typename?: 'Tour', id: string } };
+
+export type UpdateTourMutationVariables = Exact<{
+  data: UpdateTourInput;
+}>;
+
+
+export type UpdateTourMutation = { __typename?: 'Mutation', updateTour: { __typename?: 'Tour', id: string } };
+
 
 export const Travels = gql`
     query Travels($limit: Int!, $offset: Int!) {
@@ -260,5 +290,44 @@ export const UpdateTravel = gql`
 export const DeleteTravel = gql`
     mutation DeleteTravel($id: String!) {
   deleteTravel(id: $id)
+}
+    `;
+export const ToursByTravel = gql`
+    query ToursByTravel($travelSlug: String!, $limit: Int!, $offset: Int!) {
+  toursByTravel(travelSlug: $travelSlug, limit: $limit, offset: $offset) {
+    items {
+      id
+      name
+      startingDate
+      endingDate
+      price
+    }
+    hasMore
+  }
+}
+    `;
+export const Tour = gql`
+    query Tour($id: String!) {
+  tour(id: $id) {
+    id
+    name
+    startingDate
+    endingDate
+    price
+  }
+}
+    `;
+export const CreateTour = gql`
+    mutation CreateTour($data: CreateTourInput!) {
+  createTour(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateTour = gql`
+    mutation UpdateTour($data: UpdateTourInput!) {
+  updateTour(data: $data) {
+    id
+  }
 }
     `;

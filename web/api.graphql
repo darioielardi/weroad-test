@@ -1,3 +1,5 @@
+# travels
+
 query Travels($limit: Int!, $offset: Int!) {
   travels(limit: $limit, offset: $offset) {
     items {
@@ -36,4 +38,41 @@ mutation UpdateTravel($data: UpdateTravelInput!) {
 
 mutation DeleteTravel($id: String!) {
   deleteTravel(id: $id)
+}
+
+# tours
+
+query ToursByTravel($travelSlug: String!, $limit: Int!, $offset: Int!) {
+  toursByTravel(travelSlug: $travelSlug, limit: $limit, offset: $offset) {
+    items {
+      id
+      name
+      startingDate
+      endingDate
+      price
+    }
+    hasMore
+  }
+}
+
+query Tour($id: String!) {
+  tour(id: $id) {
+    id
+    name
+    startingDate
+    endingDate
+    price
+  }
+}
+
+mutation CreateTour($data: CreateTourInput!) {
+  createTour(data: $data) {
+    id
+  }
+}
+
+mutation UpdateTour($data: UpdateTourInput!) {
+  updateTour(data: $data) {
+    id
+  }
 }

@@ -17,90 +17,99 @@
     </page-header>
 
     <page-body>
-      <div v-if="$apollo.queries.travels.loading" class="px-5 py-6 sm:px-6">
+      <div
+        v-if="$apollo.queries.travels.loading"
+        class="bg-white rounded-lg shadow px-5 py-6 sm:px-6"
+      >
         <p>Loading...</p>
       </div>
 
-      <table v-if="travels" class="min-w-full divide-y divide-gray-300">
-        <thead class="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+      <div v-if="travels" class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div
+            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+          >
+            <div
+              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
             >
-              Name
-            </th>
-
-            <th
-              scope="col"
-              class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-            >
-              Status
-            </th>
-
-            <th
-              scope="col"
-              class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-            >
-              Number of days
-            </th>
-
-            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-              <span class="sr-only">Edit</span>
-            </th>
-          </tr>
-        </thead>
-
-        <tbody class="divide-y divide-gray-200 bg-white">
-          <tr v-for="travel in travels.items" :key="travel.id">
-            <td
-              class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-            >
-              {{ travel.name }}
-            </td>
-
-            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 flex">
-              <div
-                v-if="travel.isPublic"
-                class="bg-green-50 px-2.5 py-1 rounded-lg"
+              <table
+                class="bg-white rounded-lg shadow min-w-full divide-y divide-gray-300"
               >
-                <span class="text-green-500 font-medium">Public</span>
-              </div>
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Name
+                    </th>
 
-              <div
-                v-if="!travel.isPublic"
-                class="bg-red-50 px-2.5 py-1 rounded-lg"
-              >
-                <span class="text-red-400 font-medium">Private</span>
-              </div>
-            </td>
+                    <th
+                      scope="col"
+                      class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Status
+                    </th>
 
-            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-              {{ travel.numberOfDays }}
-            </td>
+                    <th
+                      scope="col"
+                      class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Number of days
+                    </th>
 
-            <td
-              class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4"
-            >
-              <nuxt-link
-                :to="travel.id"
-                class="text-indigo-600 hover:text-indigo-900"
-              >
-                View
-                <span class="sr-only">, {{ travel.name }}</span>
-              </nuxt-link>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <span class="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
 
-              <nuxt-link
-                :to="travel.id + '/edit'"
-                class="text-indigo-600 hover:text-indigo-900"
-              >
-                Edit
-                <span class="sr-only">, {{ travel.name }}</span></nuxt-link
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="travel in travels.items" :key="travel.id">
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      {{ travel.name }}
+                    </td>
+
+                    <td
+                      class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 flex"
+                    >
+                      <travel-status :is-public="travel.isPublic" />
+                    </td>
+
+                    <td
+                      class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                    >
+                      {{ travel.numberOfDays }}
+                    </td>
+
+                    <td
+                      class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4"
+                    >
+                      <nuxt-link
+                        :to="travel.id"
+                        class="text-indigo-600 hover:text-indigo-900"
+                      >
+                        View
+                        <span class="sr-only">, {{ travel.name }}</span>
+                      </nuxt-link>
+
+                      <nuxt-link
+                        :to="travel.id + '/edit'"
+                        class="text-indigo-600 hover:text-indigo-900"
+                      >
+                        Edit
+                        <span class="sr-only">, {{ travel.name }}</span>
+                      </nuxt-link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </page-body>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-header :title="travel ? travel.name : 'Loading...'">
+    <page-header :title="tour ? tour.name : 'Loading...'">
       <template #actions>
         <button
           type="button"
@@ -21,19 +21,19 @@
     </page-header>
 
     <page-body>
-      <div v-if="travel === null" class="px-5 py-6 sm:px-6">
+      <div v-if="tour === null" class="card">
         <p>Loading...</p>
       </div>
 
-      <div v-if="travel" class="px-5 py-6 sm:px-6">
-        <TravelForm
+      <div v-if="tour" class="card">
+        <tour-form
           form-id="edit-travel"
           :save="save"
           :initial-data="{
-            name: travel.name,
-            slug: travel.slug,
-            description: travel.description,
-            numberOfDays: travel.numberOfDays,
+            name: tour.name,
+            startingDate: tour.startingDate,
+            endingDate: tour.endingDate,
+            price: tour.price,
           }"
         />
       </div>
@@ -44,11 +44,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
-  CreateTravelInput,
-  Travel,
-  TravelQuery,
-  TravelQueryVariables,
-  UpdateTravel,
+  Tour,
+  TourQuery,
+  TourQueryVariables,
+  UpdateTour,
+  UpdateTourInput,
 } from '~/graphql/generated';
 
 export default Vue.extend({
@@ -57,16 +57,16 @@ export default Vue.extend({
 
   data() {
     return {
-      travel: null as TravelQuery['travel'] | null,
+      tour: null as TourQuery['tour'] | null,
     };
   },
 
   apollo: {
-    travel: {
-      query: Travel,
-      variables(): TravelQueryVariables {
+    tour: {
+      query: Tour,
+      variables(): TourQueryVariables {
         return {
-          id: this.$route.params.id,
+          id: this.$route.params.tourId,
         };
       },
     },
@@ -77,13 +77,13 @@ export default Vue.extend({
       this.$router.go(-1);
     },
 
-    async save(data: CreateTravelInput) {
+    async save(data: Omit<UpdateTourInput, 'id'>) {
       await this.$apollo.mutate({
-        mutation: UpdateTravel,
+        mutation: UpdateTour,
         variables: {
           data: {
             ...data,
-            id: this.travel!.id,
+            id: this.tour!.id,
           },
         },
       });

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-header title="New Travel">
+    <page-header :title="travel ? travel.name : 'Loading...'">
       <template #actions>
         <button
           type="button"
@@ -12,7 +12,7 @@
 
         <button
           type="submit"
-          form="new-travel"
+          form="edit-travel"
           class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Save
@@ -21,8 +21,21 @@
     </page-header>
 
     <page-body>
-      <div class="card">
-        <TravelForm :save="save" form-id="new-travel" />
+      <div v-if="travel === null" class="card">
+        <p>Loading...</p>
+      </div>
+
+      <div v-if="travel" class="card">
+        <travel-form
+          form-id="edit-travel"
+          :save="save"
+          :initial-data="{
+            name: travel.name,
+            slug: travel.slug,
+            description: travel.description,
+            numberOfDays: travel.numberOfDays,
+          }"
+        />
       </div>
     </page-body>
   </div>
@@ -31,42 +44,51 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
-  CreateTravel,
   CreateTravelInput,
-  CreateTravelMutation,
-  CreateTravelMutationVariables,
+  Travel,
+  TravelQuery,
+  TravelQueryVariables,
+  UpdateTravel,
 } from '~/graphql/generated';
 
 export default Vue.extend({
-  name: 'NewTravel',
+  name: 'EditTravelPage',
   layout: 'app',
 
   data() {
     return {
-      travel: {
-        name: '',
-        slug: '',
-        description: '',
-        numberOfDays: 1,
-      },
+      travel: null as TravelQuery['travel'] | null,
     };
+  },
+
+  apollo: {
+    travel: {
+      query: Travel,
+      variables(): TravelQueryVariables {
+        return {
+          id: this.$route.params.travelId,
+        };
+      },
+    },
   },
 
   methods: {
     cancel() {
-      this.$router.replace('/');
+      this.$router.go(-1);
     },
 
     async save(data: CreateTravelInput) {
-      const res = await this.$apollo.mutate<
-        CreateTravelMutation,
-        CreateTravelMutationVariables
-      >({
-        mutation: CreateTravel,
-        variables: { data },
+      await this.$apollo.mutate({
+        mutation: UpdateTravel,
+        variables: {
+          data: {
+            ...data,
+            id: this.travel!.id,
+          },
+        },
       });
 
-      this.$router.replace(`/${res.data?.createTravel.id}`);
+      this.$router.go(-1);
     },
   },
 });
