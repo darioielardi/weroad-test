@@ -69,21 +69,32 @@ export class TravelsService {
       throw new NotFoundException(`Travel with id "${id}" not found`);
     }
 
-    const existingBySlug = await this.travelRepo.findOne({
-      slug: input.slug,
-      id: { $ne: id },
-    });
+    if (input.slug) {
+      const existingBySlug = await this.travelRepo.findOne({
+        slug: input.slug,
+        id: { $ne: id },
+      });
 
-    if (existingBySlug) {
-      throw new ConflictException('A travel with this slug already exists');
+      if (existingBySlug) {
+        throw new ConflictException('A travel with this slug already exists');
+      }
+
+      travel.slug = input.slug;
     }
 
-    travel.slug = input.slug;
-    travel.name = input.name;
-    travel.description = input.description;
-    travel.numberOfDays = input.numberOfDays;
+    if (input.name) {
+      travel.name = input.name;
+    }
 
-    if (input.isPublic !== undefined) {
+    if (input.description) {
+      travel.description = input.description;
+    }
+
+    if (input.numberOfDays) {
+      travel.numberOfDays = input.numberOfDays;
+    }
+
+    if (typeof input.isPublic !== 'undefined') {
       travel.isPublic = input.isPublic;
     }
 
