@@ -9,7 +9,7 @@ const config: NuxtConfig = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'web',
+    title: 'WeRoad',
     htmlAttrs: {
       lang: 'en',
       class: 'h-full bg-gray-50',
@@ -68,9 +68,7 @@ const config: NuxtConfig = {
 
   apollo: {
     clientConfigs: {
-      default: {
-        httpEndpoint: 'http://localhost:3001/graphql',
-      },
+      default: '~/plugins/apollo/apolloConfig.ts',
     },
   },
 
