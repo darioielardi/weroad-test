@@ -56,6 +56,7 @@
       <textarea
         id="description"
         v-model="description"
+        rows="10"
         type="text"
         name="description"
         placeholder="Travel description"

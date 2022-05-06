@@ -70,6 +70,11 @@ const config: NuxtConfig = {
     clientConfigs: {
       default: '~/plugins/apollo/apolloConfig.ts',
     },
+    defaultOptions: {
+      $query: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
   },
 
   auth: {

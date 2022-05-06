@@ -17,7 +17,7 @@
     </page-header>
 
     <page-body>
-      <div v-if="$apollo.queries.travels.loading">
+      <div v-if="$apollo.queries.travels.loading" class="px-5 py-6 sm:px-6">
         <p>Loading...</p>
       </div>
 
@@ -83,7 +83,7 @@
               class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4"
             >
               <nuxt-link
-                :to="travel.slug"
+                :to="travel.id"
                 class="text-indigo-600 hover:text-indigo-900"
               >
                 View

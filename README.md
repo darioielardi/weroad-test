@@ -7,6 +7,8 @@ TODO:
 - remove unnecessary endpoints
 - test update travel e2e
 - remove unnecessary unit tests
+- branding
+- delete travel
 
 TO DOC:
 

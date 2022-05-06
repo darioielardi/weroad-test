@@ -21,7 +21,9 @@
     </page-header>
 
     <page-body>
-      <div v-if="travel === null">Loading...</div>
+      <div v-if="travel === null" class="px-5 py-6 sm:px-6">
+        <p>Loading...</p>
+      </div>
 
       <div v-if="travel" class="px-5 py-6 sm:px-6">
         <TravelForm
@@ -47,8 +49,6 @@ import {
   TravelQuery,
   TravelQueryVariables,
   UpdateTravel,
-  UpdateTravelMutation,
-  UpdateTravelMutationVariables,
 } from '~/graphql/generated';
 
 export default Vue.extend({
@@ -78,10 +78,7 @@ export default Vue.extend({
     },
 
     async save(data: CreateTravelInput) {
-      await this.$apollo.mutate<
-        UpdateTravelMutation,
-        UpdateTravelMutationVariables
-      >({
+      await this.$apollo.mutate({
         mutation: UpdateTravel,
         variables: {
           data: {

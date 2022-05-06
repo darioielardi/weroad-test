@@ -18,6 +18,7 @@ query Travel($id: String!) {
     slug
     description
     numberOfDays
+    isPublic
   }
 }
 
@@ -31,4 +32,8 @@ mutation UpdateTravel($data: UpdateTravelInput!) {
   updateTravel(data: $data) {
     id
   }
+}
+
+mutation DeleteTravel($id: String!) {
+  deleteTravel(id: $id)
 }
