@@ -4,10 +4,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "workspaces": [
-    "api",
-    "web"
-  ],
+  "workspaces": {
+    "packages": [
+      "api",
+      "web"
+    ],
+    "nohoist": []
+  },
+  "resolutions": {
+    "graphql": "16.4.0"
+  },
   "devDependencies": {
     "typescript": "4.4.4"
   },

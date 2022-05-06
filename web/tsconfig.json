@@ -19,7 +19,9 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxtjs/auth-next",
-      "nuxt-graphql-request",
+      "@nuxtjs/apollo",
+      "vue-apollo/types",
+      // "nuxt-graphql-request",
       "@types/node"
     ]
   },

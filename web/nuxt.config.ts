@@ -45,7 +45,7 @@ const config: NuxtConfig = {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/apollo'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
@@ -66,13 +66,12 @@ const config: NuxtConfig = {
     baseURL: 'http://localhost:3001',
   },
 
-  graphql: {
-    clients: {
+  apollo: {
+    clientConfigs: {
       default: {
-        endpoint: 'http://localhost:3001/graphql',
+        httpEndpoint: 'http://localhost:3001/graphql',
       },
     },
-    options: {},
   },
 
   auth: {
