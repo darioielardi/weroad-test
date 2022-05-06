@@ -127,8 +127,14 @@ export class ToursService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tour`;
+  async findOne(id: string) {
+    const tour = await this.tourRepo.findOne(id);
+
+    if (!tour) {
+      throw new NotFoundException(`Tour with id "${id}" not found`);
+    }
+
+    return tour;
   }
 
   async update(input: UpdateTourInput) {

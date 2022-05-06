@@ -13,12 +13,6 @@ import { ToursService } from './tours.service';
 export class ToursResolver {
   constructor(private readonly toursService: ToursService) {}
 
-  @Admin()
-  @Mutation(() => Tour)
-  createTour(@Args('data') input: CreateTourInput) {
-    return this.toursService.create(input);
-  }
-
   @Public()
   @Query(() => PaginatedTours, { name: 'toursByTravel' })
   findByTravel(
@@ -29,8 +23,14 @@ export class ToursResolver {
   }
 
   @Query(() => Tour, { name: 'tour' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.toursService.findOne(id);
+  }
+
+  @Admin()
+  @Mutation(() => Tour)
+  createTour(@Args('data') input: CreateTourInput) {
+    return this.toursService.create(input);
   }
 
   @Editor()
@@ -39,6 +39,7 @@ export class ToursResolver {
     return this.toursService.update(input);
   }
 
+  @Admin()
   @Mutation(() => Tour)
   removeTour(@Args('id', { type: () => Int }) id: number) {
     return this.toursService.remove(id);

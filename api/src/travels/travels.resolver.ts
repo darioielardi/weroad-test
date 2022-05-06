@@ -14,12 +14,6 @@ import { TravelsService } from './travels.service';
 export class TravelsResolver {
   constructor(private readonly travelsService: TravelsService) {}
 
-  @Admin()
-  @Mutation(() => Travel)
-  createTravel(@Args('data') input: CreateTravelInput) {
-    return this.travelsService.create(input);
-  }
-
   @Public()
   @Query(() => PaginatedTravels, { name: 'travels' })
   findAll(@Args() args: PaginationArgs, @CurrentUser() user: AuthUser | null) {
@@ -33,6 +27,12 @@ export class TravelsResolver {
   @Query(() => Travel, { name: 'travel' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.travelsService.findOne(id);
+  }
+
+  @Admin()
+  @Mutation(() => Travel)
+  createTravel(@Args('data') input: CreateTravelInput) {
+    return this.travelsService.create(input);
   }
 
   @Admin()

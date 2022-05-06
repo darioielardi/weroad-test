@@ -87,6 +87,40 @@ describe('Update Travel (e2e)', () => {
       });
   });
 
+  test('travel not found', async () => {
+    const adminId = await usersRepo.nativeInsert({
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+      role: Role.ADMIN,
+    });
+
+    const token = jwtService.sign({ sub: adminId });
+
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .auth(token, { type: 'bearer' })
+      .send({
+        variables: {
+          data: {
+            id: faker.datatype.uuid(),
+            name: faker.lorem.sentence(),
+          },
+        },
+        query: `
+            mutation($data: UpdateTravelInput!) {
+              updateTravel(data: $data) {
+                id
+              }
+            }
+          `,
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.data).toBeNull();
+        expect(res.body.errors[0].extensions.code).toBe('404');
+      });
+  });
+
   test('success', async () => {
     const adminId = await usersRepo.nativeInsert({
       email: faker.internet.email(),
