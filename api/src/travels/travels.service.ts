@@ -62,10 +62,34 @@ export class TravelsService {
     return this.travelRepo.findOne({ slug });
   }
 
-  update(id: string, input: UpdateTravelInput) {
-    // TODO: if isPublic check stuff
+  async update(id: string, input: UpdateTravelInput) {
+    const travel = await this.travelRepo.findOne(id);
 
-    return `This action updates a #${id} travel`;
+    if (!travel) {
+      throw new NotFoundException(`Travel with id "${id}" not found`);
+    }
+
+    const existingBySlug = await this.travelRepo.findOne({
+      slug: input.slug,
+      id: { $ne: id },
+    });
+
+    if (existingBySlug) {
+      throw new ConflictException('A travel with this slug already exists');
+    }
+
+    travel.slug = input.slug;
+    travel.name = input.name;
+    travel.description = input.description;
+    travel.numberOfDays = input.numberOfDays;
+
+    if (input.isPublic !== undefined) {
+      travel.isPublic = input.isPublic;
+    }
+
+    await this.travelRepo.persistAndFlush(travel);
+
+    return travel;
   }
 
   async delete(id: string) {

@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
-import { Admin } from '../auth/roles.decorator';
+import { Admin, Editor } from '../auth/roles.decorator';
 import { PaginationArgs } from '../common/pagination.args';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { PaginatedTravels } from './dto/list-travels.input';
@@ -29,11 +29,13 @@ export class TravelsResolver {
     });
   }
 
+  @Editor()
   @Query(() => Travel, { name: 'travel' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.travelsService.findOne(id);
   }
 
+  @Admin()
   @Mutation(() => Travel)
   updateTravel(@Args('data') input: UpdateTravelInput) {
     return this.travelsService.update(input.id, input);
