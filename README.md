@@ -5,6 +5,8 @@ TODO:
 - db w docker (compose?)
 - husky + lint-staged ?
 - remove unnecessary endpoints
+- test update travel e2e
+- remove unnecessary unit tests
 
 TO DOC:
 

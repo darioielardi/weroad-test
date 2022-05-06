@@ -186,7 +186,28 @@ export type TravelsQueryVariables = Exact<{
 }>;
 
 
-export type TravelsQuery = { __typename?: 'Query', travels: { __typename?: 'PaginatedTravels', hasMore: boolean, items: Array<{ __typename?: 'Travel', id: string, name: string, slug: string, isPublic: boolean }> } };
+export type TravelsQuery = { __typename?: 'Query', travels: { __typename?: 'PaginatedTravels', hasMore: boolean, items: Array<{ __typename?: 'Travel', id: string, name: string, slug: string, isPublic: boolean, numberOfDays: number }> } };
+
+export type TravelQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type TravelQuery = { __typename?: 'Query', travel: { __typename?: 'Travel', id: string, name: string, slug: string, description: string, numberOfDays: number } };
+
+export type CreateTravelMutationVariables = Exact<{
+  data: CreateTravelInput;
+}>;
+
+
+export type CreateTravelMutation = { __typename?: 'Mutation', createTravel: { __typename?: 'Travel', id: string } };
+
+export type UpdateTravelMutationVariables = Exact<{
+  data: UpdateTravelInput;
+}>;
+
+
+export type UpdateTravelMutation = { __typename?: 'Mutation', updateTravel: { __typename?: 'Travel', id: string } };
 
 
 export const Travels = gql`
@@ -197,8 +218,34 @@ export const Travels = gql`
       name
       slug
       isPublic
+      numberOfDays
     }
     hasMore
+  }
+}
+    `;
+export const Travel = gql`
+    query Travel($id: String!) {
+  travel(id: $id) {
+    id
+    name
+    slug
+    description
+    numberOfDays
+  }
+}
+    `;
+export const CreateTravel = gql`
+    mutation CreateTravel($data: CreateTravelInput!) {
+  createTravel(data: $data) {
+    id
+  }
+}
+    `;
+export const UpdateTravel = gql`
+    mutation UpdateTravel($data: UpdateTravelInput!) {
+  updateTravel(data: $data) {
+    id
   }
 }
     `;

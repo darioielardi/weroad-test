@@ -5,7 +5,30 @@ query Travels($limit: Int!, $offset: Int!) {
       name
       slug
       isPublic
+      numberOfDays
     }
     hasMore
+  }
+}
+
+query Travel($id: String!) {
+  travel(id: $id) {
+    id
+    name
+    slug
+    description
+    numberOfDays
+  }
+}
+
+mutation CreateTravel($data: CreateTravelInput!) {
+  createTravel(data: $data) {
+    id
+  }
+}
+
+mutation UpdateTravel($data: UpdateTravelInput!) {
+  updateTravel(data: $data) {
+    id
   }
 }
