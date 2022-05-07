@@ -76,3 +76,7 @@ mutation UpdateTour($data: UpdateTourInput!) {
     id
   }
 }
+
+mutation DeleteTour($id: String!) {
+  deleteTour(id: $id)
+}

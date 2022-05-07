@@ -24,7 +24,7 @@ export class TravelsService {
     });
 
     if (existingBySlug) {
-      throw new ConflictException('A travel with this slug already exists');
+      throw new ConflictException('slug-already-exists');
     }
 
     const travel = this.travelRepo.create(input);
@@ -66,7 +66,7 @@ export class TravelsService {
     const travel = await this.travelRepo.findOne(id);
 
     if (!travel) {
-      throw new NotFoundException(`Travel with id "${id}" not found`);
+      throw new NotFoundException(`travel-not-found`);
     }
 
     if (input.slug) {
@@ -76,7 +76,7 @@ export class TravelsService {
       });
 
       if (existingBySlug) {
-        throw new ConflictException('A travel with this slug already exists');
+        throw new ConflictException('slug-already-exists');
       }
 
       travel.slug = input.slug;
@@ -107,7 +107,7 @@ export class TravelsService {
     const travel = await this.travelRepo.findOne(id);
 
     if (!travel) {
-      throw new NotFoundException(`Travel with id ${id} not found`);
+      throw new NotFoundException(`travel-not-found`);
     }
 
     return this.travelRepo.removeAndFlush(travel);

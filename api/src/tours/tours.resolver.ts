@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
 import { Admin, Editor } from '../auth/roles.decorator';
@@ -40,8 +40,9 @@ export class ToursResolver {
   }
 
   @Admin()
-  @Mutation(() => Tour)
-  removeTour(@Args('id', { type: () => Int }) id: number) {
-    return this.toursService.remove(id);
+  @Mutation(() => Boolean)
+  async deleteTour(@Args('id', { type: () => String }) id: string) {
+    await this.toursService.remove(id);
+    return true;
   }
 }

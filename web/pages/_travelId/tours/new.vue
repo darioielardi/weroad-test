@@ -30,7 +30,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { CreateTour, CreateTourInput } from '~/graphql/generated';
+import {
+  CreateTour,
+  CreateTourInput,
+  CreateTourMutation,
+  CreateTourMutationVariables,
+} from '~/graphql/generated';
 
 export default Vue.extend({
   name: 'NewTourPage',
@@ -42,7 +47,10 @@ export default Vue.extend({
     },
 
     async save(data: CreateTourInput) {
-      await this.$apollo.mutate({
+      await this.$apollo.mutate<
+        CreateTourMutation,
+        CreateTourMutationVariables
+      >({
         mutation: CreateTour,
         variables: {
           data: {

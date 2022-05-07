@@ -5,12 +5,11 @@ TODO:
 - db w docker (compose?)
 - husky + lint-staged ?
 - remove unnecessary endpoints
-- test update travel e2e
 - remove unnecessary unit tests
 - branding
-- delete travel
 - travel moods
 - error handling (codes + alerts)
+- toasts https://github.com/nuxt-community/community-modules/tree/master/packages/toast
 
 TO DOC:
 

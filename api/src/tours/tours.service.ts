@@ -31,9 +31,7 @@ export class ToursService {
     const travel = await this.travelsService.findBySlug(args.travelSlug);
 
     if (!travel || (publicOnly && !travel.isPublic)) {
-      throw new NotFoundException(
-        `Travel with slug "${args.travelSlug}" not found`,
-      );
+      throw new NotFoundException('travel-not-found');
     }
 
     const where: FilterQuery<Tour> = {
@@ -96,7 +94,7 @@ export class ToursService {
     const tour = await this.tourRepo.findOne(id);
 
     if (!tour) {
-      throw new NotFoundException(`Tour with id "${id}" not found`);
+      throw new NotFoundException(`tour-not-found`);
     }
 
     return tour;
@@ -106,7 +104,7 @@ export class ToursService {
     // validate dates
 
     if (input.startingDate >= input.endingDate) {
-      throw new BadRequestException('Invalid dates');
+      throw new BadRequestException('invalid-dates');
     }
 
     // validate name
@@ -116,15 +114,13 @@ export class ToursService {
     });
 
     if (existingByName) {
-      throw new ConflictException('A tour with this name already exists');
+      throw new ConflictException('name-already-exists');
     }
 
     const travel = await this.travelsService.findOne(input.travelId);
 
     if (!travel) {
-      throw new NotFoundException(
-        `Travel with id "${input.travelId}" not found`,
-      );
+      throw new NotFoundException('travel-not-found');
     }
 
     // create and save
@@ -168,7 +164,7 @@ export class ToursService {
       });
 
       if (existingByName && existingByName.id !== tour.id) {
-        throw new ConflictException('A tour with this name already exists');
+        throw new ConflictException('name-already-exists');
       }
 
       tour.name = input.name;
@@ -187,7 +183,13 @@ export class ToursService {
     return tour;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tour`;
+  async remove(id: string) {
+    const tour = await this.tourRepo.findOne(id);
+
+    if (!tour) {
+      throw new NotFoundException(`tour-not-found`);
+    }
+
+    return this.tourRepo.removeAndFlush(tour);
   }
 }

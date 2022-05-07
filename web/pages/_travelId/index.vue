@@ -162,7 +162,7 @@
 
                       <td
                         v-if="travel"
-                        class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6"
+                        class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-3"
                       >
                         <nuxt-link
                           :to="'/' + travel.id + '/tours/' + tour.id"
@@ -171,6 +171,15 @@
                           Edit
                           <span class="sr-only">, {{ tour.name }}</span>
                         </nuxt-link>
+
+                        <button
+                          v-if="$auth.user && $auth.user.role === 'admin'"
+                          type="button"
+                          class="text-red-600 hover:text-red-700 font-medium"
+                          @click="deleteTour(tour.id)"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   </tbody>
@@ -187,6 +196,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
+  DeleteTour,
+  DeleteTourMutation,
+  DeleteTourMutationVariables,
   DeleteTravel,
   ToursByTravel,
   ToursByTravelQuery,
@@ -273,6 +285,22 @@ export default Vue.extend({
         });
 
         await this.$apollo.queries.travel.refetch();
+      }
+    },
+
+    async deleteTour(tourId: string) {
+      if (confirm('Do you really want to delete this tour?')) {
+        await this.$apollo.mutate<
+          DeleteTourMutation,
+          DeleteTourMutationVariables
+        >({
+          mutation: DeleteTour,
+          variables: {
+            id: tourId,
+          },
+        });
+
+        await this.$apollo.queries.toursByTravel.refetch();
       }
     },
   },

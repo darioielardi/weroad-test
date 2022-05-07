@@ -34,8 +34,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTour: Tour;
   createTravel: Travel;
+  deleteTour: Scalars['Boolean'];
   deleteTravel: Scalars['Boolean'];
-  removeTour: Tour;
   updateTour: Tour;
   updateTravel: Travel;
 };
@@ -51,13 +51,13 @@ export type MutationCreateTravelArgs = {
 };
 
 
-export type MutationDeleteTravelArgs = {
+export type MutationDeleteTourArgs = {
   id: Scalars['String'];
 };
 
 
-export type MutationRemoveTourArgs = {
-  id: Scalars['Int'];
+export type MutationDeleteTravelArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -246,6 +246,13 @@ export type UpdateTourMutationVariables = Exact<{
 
 export type UpdateTourMutation = { __typename?: 'Mutation', updateTour: { __typename?: 'Tour', id: string } };
 
+export type DeleteTourMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteTourMutation = { __typename?: 'Mutation', deleteTour: boolean };
+
 
 export const Travels = gql`
     query Travels($limit: Int!, $offset: Int!) {
@@ -329,5 +336,10 @@ export const UpdateTour = gql`
   updateTour(data: $data) {
     id
   }
+}
+    `;
+export const DeleteTour = gql`
+    mutation DeleteTour($id: String!) {
+  deleteTour(id: $id)
 }
     `;
