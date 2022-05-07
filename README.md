@@ -6,8 +6,6 @@ TODO:
 - remove unnecessary endpoints
 - remove unnecessary unit tests
 - branding
-- travel moods
-- error handling (codes + alerts)
 - toasts https://github.com/nuxt-community/community-modules/tree/master/packages/toast
 
 TO DOC:
@@ -29,9 +27,3 @@ start
 
 yarn api test:setup
 yarn api test / yarn api test:e2e
-
-## To Ask
-
-- roles system
-- travel slug vs name uniqueness
-- travel moods (json vs relation vs columns)

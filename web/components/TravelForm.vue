@@ -85,6 +85,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import slugify from 'slugify';
 import { CreateTravelInput } from '~/graphql/generated';
 
 export default Vue.extend({
@@ -146,6 +147,12 @@ export default Vue.extend({
         },
       },
     };
+  },
+
+  watch: {
+    name(value) {
+      this.slug = slugify(value);
+    },
   },
 
   methods: {
