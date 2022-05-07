@@ -82,21 +82,15 @@ export class TravelsService {
       travel.slug = input.slug;
     }
 
-    if (input.name) {
-      travel.name = input.name;
-    }
-
-    if (input.description) {
-      travel.description = input.description;
-    }
-
-    if (input.numberOfDays) {
-      travel.numberOfDays = input.numberOfDays;
-    }
-
-    if (typeof input.isPublic !== 'undefined') {
-      travel.isPublic = input.isPublic;
-    }
+    travel.name = input.name || travel.name;
+    travel.description = input.description || travel.description;
+    travel.isPublic = input.isPublic ?? travel.isPublic;
+    travel.numberOfDays = input.numberOfDays ?? travel.numberOfDays;
+    travel.natureMood = input.natureMood ?? travel.natureMood;
+    travel.relaxMood = input.relaxMood ?? travel.relaxMood;
+    travel.historyMood = input.historyMood ?? travel.historyMood;
+    travel.cultureMood = input.cultureMood ?? travel.cultureMood;
+    travel.partyMood = input.partyMood ?? travel.partyMood;
 
     await this.travelRepo.persistAndFlush(travel);
 

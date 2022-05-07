@@ -24,9 +24,14 @@ export type CreateTourInput = {
 };
 
 export type CreateTravelInput = {
+  cultureMood?: InputMaybe<Scalars['Int']>;
   description: Scalars['String'];
+  historyMood?: InputMaybe<Scalars['Int']>;
   name: Scalars['String'];
+  natureMood?: InputMaybe<Scalars['Int']>;
   numberOfDays: Scalars['Int'];
+  partyMood?: InputMaybe<Scalars['Int']>;
+  relaxMood?: InputMaybe<Scalars['Int']>;
   slug: Scalars['String'];
 };
 
@@ -144,11 +149,16 @@ export enum ToursSortBy {
 export type Travel = {
   __typename?: 'Travel';
   createdAt: Scalars['DateTime'];
+  cultureMood: Scalars['Int'];
   description: Scalars['String'];
+  historyMood: Scalars['Int'];
   id: Scalars['ID'];
   isPublic: Scalars['Boolean'];
   name: Scalars['String'];
+  natureMood: Scalars['Int'];
   numberOfDays: Scalars['Float'];
+  partyMood: Scalars['Int'];
+  relaxMood: Scalars['Int'];
   slug: Scalars['String'];
   tours: Array<Tour>;
   updatedAt: Scalars['DateTime'];
@@ -163,11 +173,16 @@ export type UpdateTourInput = {
 };
 
 export type UpdateTravelInput = {
+  cultureMood?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
+  historyMood?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   isPublic?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  natureMood?: InputMaybe<Scalars['Int']>;
   numberOfDays?: InputMaybe<Scalars['Int']>;
+  partyMood?: InputMaybe<Scalars['Int']>;
+  relaxMood?: InputMaybe<Scalars['Int']>;
   slug?: InputMaybe<Scalars['String']>;
 };
 
@@ -193,7 +208,7 @@ export type TravelQueryVariables = Exact<{
 }>;
 
 
-export type TravelQuery = { __typename?: 'Query', travel: { __typename?: 'Travel', id: string, name: string, slug: string, description: string, numberOfDays: number, isPublic: boolean } };
+export type TravelQuery = { __typename?: 'Query', travel: { __typename?: 'Travel', id: string, name: string, slug: string, description: string, numberOfDays: number, isPublic: boolean, natureMood: number, relaxMood: number, historyMood: number, cultureMood: number, partyMood: number } };
 
 export type CreateTravelMutationVariables = Exact<{
   data: CreateTravelInput;
@@ -277,6 +292,11 @@ export const Travel = gql`
     description
     numberOfDays
     isPublic
+    natureMood
+    relaxMood
+    historyMood
+    cultureMood
+    partyMood
   }
 }
     `;

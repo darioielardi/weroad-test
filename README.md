@@ -3,7 +3,6 @@
 TODO:
 
 - db w docker (compose?)
-- husky + lint-staged ?
 - remove unnecessary endpoints
 - remove unnecessary unit tests
 - branding

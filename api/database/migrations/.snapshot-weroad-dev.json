@@ -83,6 +83,56 @@
           "primary": false,
           "nullable": false,
           "mappedType": "integer"
+        },
+        "nature_mood": {
+          "name": "nature_mood",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
+        },
+        "relax_mood": {
+          "name": "relax_mood",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
+        },
+        "history_mood": {
+          "name": "history_mood",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
+        },
+        "culture_mood": {
+          "name": "culture_mood",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
+        },
+        "party_mood": {
+          "name": "party_mood",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
         }
       },
       "name": "travel",
@@ -113,6 +163,36 @@
           "expression": "number_of_days >= 0",
           "definition": "check ((number_of_days >= 0))",
           "columnName": "number_of_days"
+        },
+        {
+          "name": "travel_nature_mood_check",
+          "expression": "nature_mood >= 0 AND nature_mood <= 100",
+          "definition": "check ((nature_mood >= 0 AND nature_mood <= 100))",
+          "columnName": "nature_mood"
+        },
+        {
+          "name": "travel_relax_mood_check",
+          "expression": "relax_mood >= 0 AND relax_mood <= 100",
+          "definition": "check ((relax_mood >= 0 AND relax_mood <= 100))",
+          "columnName": "relax_mood"
+        },
+        {
+          "name": "travel_history_mood_check",
+          "expression": "history_mood >= 0 AND history_mood <= 100",
+          "definition": "check ((history_mood >= 0 AND history_mood <= 100))",
+          "columnName": "history_mood"
+        },
+        {
+          "name": "travel_culture_mood_check",
+          "expression": "culture_mood >= 0 AND culture_mood <= 100",
+          "definition": "check ((culture_mood >= 0 AND culture_mood <= 100))",
+          "columnName": "culture_mood"
+        },
+        {
+          "name": "travel_party_mood_check",
+          "expression": "party_mood >= 0 AND party_mood <= 100",
+          "definition": "check ((party_mood >= 0 AND party_mood <= 100))",
+          "columnName": "party_mood"
         }
       ],
       "foreignKeys": {}

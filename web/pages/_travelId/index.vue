@@ -33,6 +33,8 @@
     </page-header>
 
     <page-body>
+      <!-- DETAILS -->
+
       <div
         v-if="travel !== null"
         class="bg-white rounded-lg shadow px-4 py-5 sm:p-0"
@@ -77,6 +79,32 @@
         </dl>
       </div>
 
+      <!-- MOODS -->
+
+      <div v-if="moods !== null" class="mt-10">
+        <div class="sm:flex-auto">
+          <h1 class="text-xl font-semibold text-gray-900">Moods</h1>
+        </div>
+
+        <div class="mt-5 grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div
+            v-for="mood in moods"
+            :key="mood.label"
+            class="bg-white rounded-lg shadow px-4 py-4 flex flex-col space-y-2"
+          >
+            <div class="font-medium text-sm text-gray-500">
+              {{ mood.label }}
+            </div>
+
+            <div class="font-medium text-xl text-gray-800">
+              {{ mood.value }} %
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOURS -->
+
       <div v-if="travel && tours" class="mt-12">
         <div class="sm:flex sm:items-center">
           <div class="sm:flex-auto">
@@ -100,7 +128,7 @@
 
         <div
           v-if="travel !== null && tours !== null"
-          class="mt-8 flex flex-col"
+          class="mt-5 flex flex-col"
         >
           <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div
@@ -218,6 +246,22 @@ export default Vue.extend({
       travel: null as TravelQuery['travel'] | null,
       tours: null as ToursByTravelQuery['toursByTravel'] | null,
     };
+  },
+
+  computed: {
+    moods(): { label: string; value: number }[] | null {
+      if (!this.travel) {
+        return null;
+      }
+
+      return [
+        { label: 'Nature', value: this.travel.natureMood },
+        { label: 'Relax', value: this.travel.relaxMood },
+        { label: 'History', value: this.travel.historyMood },
+        { label: 'Culture', value: this.travel.cultureMood },
+        { label: 'Party', value: this.travel.partyMood },
+      ];
+    },
   },
 
   apollo: {

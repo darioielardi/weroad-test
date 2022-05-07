@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsString,
   Matches,
+  Max,
   Min,
 } from 'class-validator';
 
@@ -27,4 +28,39 @@ export class CreateTravelInput {
   @IsInt()
   @Min(1)
   numberOfDays: number;
+
+  @Field(() => Int)
+  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  natureMood?: number;
+
+  @Field(() => Int)
+  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  relaxMood?: number;
+
+  @Field(() => Int)
+  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  historyMood?: number;
+
+  @Field(() => Int)
+  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  cultureMood?: number;
+
+  @Field(() => Int)
+  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  partyMood?: number;
 }

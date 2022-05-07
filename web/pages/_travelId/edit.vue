@@ -34,6 +34,11 @@
             slug: travel.slug,
             description: travel.description,
             numberOfDays: travel.numberOfDays,
+            natureMood: travel.natureMood,
+            relaxMood: travel.relaxMood,
+            historyMood: travel.historyMood,
+            cultureMood: travel.cultureMood,
+            partyMood: travel.partyMood,
           }"
         />
       </div>

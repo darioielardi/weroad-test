@@ -21,6 +21,11 @@ query Travel($id: String!) {
     description
     numberOfDays
     isPublic
+    natureMood
+    relaxMood
+    historyMood
+    cultureMood
+    partyMood
   }
 }
 
