@@ -5,8 +5,6 @@ TODO:
 - db w docker (compose?)
 - remove unnecessary endpoints
 - remove unnecessary unit tests
-- branding
-- toasts https://github.com/nuxt-community/community-modules/tree/master/packages/toast
 
 TO DOC:
 

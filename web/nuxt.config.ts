@@ -92,6 +92,11 @@ const config: NuxtConfig = {
         },
       },
     },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: '/',
+    },
   },
 
   googleFonts: {

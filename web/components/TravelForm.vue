@@ -12,7 +12,7 @@
         type="text"
         name="name"
         placeholder="Travel name"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -28,7 +28,7 @@
         type="text"
         name="slug"
         placeholder="Travel slug"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -44,7 +44,7 @@
         type="number"
         name="numberOfDays"
         placeholder="Number of days"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -60,7 +60,7 @@
         type="text"
         name="description"
         placeholder="Travel description"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -77,7 +77,7 @@
         v-model.number="mood.value"
         type="number"
         step="5"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
   </form>
@@ -151,7 +151,7 @@ export default Vue.extend({
 
   watch: {
     name(value) {
-      this.slug = slugify(value);
+      this.slug = slugify(value).toLowerCase();
     },
   },
 

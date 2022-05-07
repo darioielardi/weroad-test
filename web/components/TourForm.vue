@@ -12,7 +12,7 @@
         type="text"
         name="name"
         placeholder="Tour name"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -28,7 +28,7 @@
         type="text"
         name="price"
         placeholder="Tour price"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -44,7 +44,7 @@
         type="date"
         name="startingDate"
         placeholder="Starting date"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
       />
     </div>
 
@@ -62,7 +62,7 @@
         :min="startingDate"
         name="endingDate"
         placeholder="Ending date"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md disabled:opacity-50"
+        class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md disabled:opacity-50"
       />
     </div>
   </form>

@@ -6,14 +6,15 @@
           <div class="flex">
             <div class="flex-shrink-0 flex items-center">
               <img
-                class="block lg:hidden h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                alt="Workflow"
+                class="block lg:hidden h-10 w-auto"
+                src="~/assets/weroad-logo-symbol.png"
+                alt="WeRoad"
               />
+
               <img
-                class="hidden lg:block h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
-                alt="Workflow"
+                class="hidden lg:block h-14 w-auto"
+                src="~/assets/weroad-logo-symbol.png"
+                alt="WeRoad"
               />
             </div>
 
@@ -24,7 +25,7 @@
                 :href="item.href"
                 :class="[
                   item.current
-                    ? 'border-indigo-500 text-gray-900'
+                    ? 'border-brand text-gray-900'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
                   'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium',
                 ]"
@@ -37,7 +38,7 @@
           <div class="hidden sm:ml-6 sm:flex sm:items-center">
             <button
               type="button"
-              class="inline-flex items-center px-4 py-2 text-sm rounded font-medium text-gray-800 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="inline-flex items-center px-4 py-2 text-sm rounded font-medium text-gray-800 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               @click="logout"
             >
               Logout
@@ -75,7 +76,9 @@ export default Vue.extend({
 
   methods: {
     logout() {
-      this.$auth.logout();
+      this.$auth.logout().then(() => {
+        this.$router.push('/login');
+      });
     },
   },
 });

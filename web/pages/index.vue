@@ -1,14 +1,21 @@
 <template>
   <div>
     <page-header title="Travels">
-      <template
-        v-if="$auth.user !== null && $auth.user.role === 'admin'"
-        #actions
-      >
-        <nuxt-link to="/new">
+      <template #actions>
+        <input
+          v-model="searchTerm"
+          placeholder="Search..."
+          class="shadow-sm border border-gray-200 rounded-md px-2.5 py-2 text-sm"
+          @keydown.enter="search"
+        />
+
+        <nuxt-link
+          v-if="$auth.user !== null && $auth.user.role === 'admin'"
+          to="/new"
+        >
           <button
             type="button"
-            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
           >
             New
           </button>
@@ -17,13 +24,6 @@
     </page-header>
 
     <page-body>
-      <div
-        v-if="$apollo.queries.travels.loading"
-        class="bg-white rounded-lg shadow px-5 py-6 sm:px-6"
-      >
-        <p>Loading...</p>
-      </div>
-
       <div v-if="travels" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
@@ -89,7 +89,7 @@
                     >
                       <nuxt-link
                         :to="travel.id"
-                        class="text-indigo-600 hover:text-indigo-900"
+                        class="text-gray-500 hover:text-gray-700"
                       >
                         View
                         <span class="sr-only">, {{ travel.name }}</span>
@@ -100,7 +100,7 @@
                           $auth.user !== null && $auth.user.role === 'admin'
                         "
                         :to="travel.id + '/edit'"
-                        class="text-indigo-600 hover:text-indigo-900"
+                        class="text-brand hover:text-brand-700"
                       >
                         Edit
                         <span class="sr-only">, {{ travel.name }}</span>
@@ -110,6 +110,13 @@
                 </tbody>
               </table>
             </div>
+
+            <table-pagination
+              :page="page"
+              :rows="rows"
+              :total="travels.count"
+              @change="onPaginationChange"
+            />
           </div>
         </div>
       </div>
@@ -132,10 +139,9 @@ export default Vue.extend({
   data() {
     return {
       travels: null as TravelsQuery['travels'] | null,
-      pagination: {
-        limit: 10,
-        offset: 0,
-      },
+      rows: 5,
+      page: Number(this.$route.query.page || 0) || 1,
+      searchTerm: (this.$route.query.search as string) || '',
     };
   },
 
@@ -144,10 +150,38 @@ export default Vue.extend({
       query: Travels,
       variables(): TravelsQueryVariables {
         return {
-          limit: this.pagination.limit,
-          offset: this.pagination.offset,
+          page: this.page,
+          rows: this.rows,
+          searchTerm: this.$route.query.search as string,
         };
       },
+    },
+  },
+
+  watch: {
+    '$route.query.page'(page: string) {
+      this.page = Number(page) || 1;
+    },
+  },
+
+  methods: {
+    search() {
+      this.$router.replace({
+        query: {
+          ...this.$route.query,
+          search: this.searchTerm,
+          page: undefined,
+        },
+      });
+    },
+
+    onPaginationChange(page: number) {
+      this.$router.replace({
+        query: {
+          ...this.$route.query,
+          page: page === 1 ? '' : page.toString(),
+        },
+      });
     },
   },
 });
