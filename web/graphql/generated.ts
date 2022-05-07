@@ -18,7 +18,7 @@ export type Scalars = {
 export type CreateTourInput = {
   endingDate: Scalars['DateTime'];
   name: Scalars['String'];
-  price: Scalars['Float'];
+  price: Scalars['Int'];
   startingDate: Scalars['DateTime'];
   travelId: Scalars['String'];
 };
@@ -130,7 +130,7 @@ export type Tour = {
   endingDate: Scalars['DateTime'];
   id: Scalars['ID'];
   name: Scalars['String'];
-  price: Scalars['Float'];
+  price: Scalars['Int'];
   startingDate: Scalars['DateTime'];
   travel: Travel;
   updatedAt: Scalars['DateTime'];
@@ -158,7 +158,7 @@ export type UpdateTourInput = {
   endingDate?: InputMaybe<Scalars['DateTime']>;
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
-  price?: InputMaybe<Scalars['Float']>;
+  price?: InputMaybe<Scalars['Int']>;
   startingDate?: InputMaybe<Scalars['DateTime']>;
 };
 

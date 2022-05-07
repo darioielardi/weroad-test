@@ -96,6 +96,9 @@
                       </nuxt-link>
 
                       <nuxt-link
+                        v-if="
+                          $auth.user !== null && $auth.user.role === 'admin'
+                        "
                         :to="travel.id + '/edit'"
                         class="text-indigo-600 hover:text-indigo-900"
                       >

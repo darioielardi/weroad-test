@@ -21,7 +21,7 @@
           Delete
         </button>
 
-        <nuxt-link to="/edit">
+        <nuxt-link :to="'/' + travel.id + '/edit'">
           <button
             type="button"
             class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -87,7 +87,7 @@
             v-if="$auth.user && $auth.user.role === 'admin'"
             class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none"
           >
-            <nuxt-link :to="'/' + travel.id + '/tours'">
+            <nuxt-link :to="'/' + travel.id + '/tours/new'">
               <button
                 type="button"
                 class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -157,11 +157,7 @@
                         class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                       >
                         €
-                        {{
-                          new Intl.NumberFormat(undefined, {}).format(
-                            tour.price / 100
-                          )
-                        }}
+                        {{ new Intl.NumberFormat().format(tour.price / 100) }}
                       </td>
 
                       <td

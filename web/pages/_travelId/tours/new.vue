@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-header title="New Travel">
+    <page-header title="New Tour">
       <template #actions>
         <button
           type="button"
@@ -12,7 +12,7 @@
 
         <button
           type="submit"
-          form="new-travel"
+          form="new-tour"
           class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Save
@@ -22,7 +22,7 @@
 
     <page-body>
       <div class="card">
-        <TravelForm :save="save" form-id="new-travel" />
+        <tour-form form-id="new-tour" :save="save" />
       </div>
     </page-body>
   </div>
@@ -30,32 +30,29 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {
-  CreateTravel,
-  CreateTravelInput,
-  CreateTravelMutation,
-  CreateTravelMutationVariables,
-} from '~/graphql/generated';
+import { CreateTour, CreateTourInput } from '~/graphql/generated';
 
 export default Vue.extend({
-  name: 'NewTravel',
+  name: 'NewTourPage',
   layout: 'app',
 
   methods: {
     cancel() {
-      this.$router.replace('/');
+      this.$router.go(-1);
     },
 
-    async save(data: CreateTravelInput) {
-      const res = await this.$apollo.mutate<
-        CreateTravelMutation,
-        CreateTravelMutationVariables
-      >({
-        mutation: CreateTravel,
-        variables: { data },
+    async save(data: CreateTourInput) {
+      await this.$apollo.mutate({
+        mutation: CreateTour,
+        variables: {
+          data: {
+            ...data,
+            travelId: this.$route.params.travelId,
+          },
+        },
       });
 
-      this.$router.replace(`/${res.data?.createTravel.id}`);
+      this.$router.go(-1);
     },
   },
 });

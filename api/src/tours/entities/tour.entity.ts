@@ -1,5 +1,5 @@
 import { Check, Entity, ManyToOne, Property } from '@mikro-orm/core';
-import { ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../common/base.entity';
 import { Travel } from '../../travels/entities/travel.entity';
 
@@ -19,6 +19,7 @@ export class Tour extends BaseEntity {
   @Property({ columnType: 'date' })
   endingDate: Date;
 
+  @Field(() => Int)
   @Property({ columnType: 'int', check: 'price >= 0 AND price % 100 = 0' })
   price: number;
 

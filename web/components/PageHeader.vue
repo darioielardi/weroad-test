@@ -8,6 +8,12 @@
           >
             {{ title }}
           </h2>
+
+          <div v-if="subtitle">
+            <p class="text-sm leading-5 text-gray-500">
+              {{ subtitle }}
+            </p>
+          </div>
         </div>
 
         <div class="mt-4 flex md:mt-0 md:ml-4">
@@ -28,6 +34,10 @@ export default Vue.extend({
     title: {
       type: String,
       required: true,
+    },
+    subtitle: {
+      type: String,
+      default: null,
     },
   },
 });

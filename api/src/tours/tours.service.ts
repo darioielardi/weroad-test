@@ -24,41 +24,6 @@ export class ToursService {
     private travelsService: TravelsService,
   ) {}
 
-  async create(input: CreateTourInput) {
-    // validate dates
-
-    if (input.startingDate >= input.endingDate) {
-      throw new BadRequestException('Invalid dates');
-    }
-
-    // validate name
-
-    const existingByName = await this.tourRepo.findOne({
-      name: input.name,
-    });
-
-    if (existingByName) {
-      throw new ConflictException('A tour with this name already exists');
-    }
-
-    const travel = await this.travelsService.findOne(input.travelId);
-
-    if (!travel) {
-      throw new NotFoundException(
-        `Travel with id "${input.travelId}" not found`,
-      );
-    }
-
-    // create and save
-
-    const tour = this.tourRepo.create(input);
-    tour.travel = travel;
-
-    await this.tourRepo.persistAndFlush(tour);
-
-    return tour;
-  }
-
   async findByTravel(
     args: FindToursArgs,
     publicOnly: boolean,
@@ -137,6 +102,45 @@ export class ToursService {
     return tour;
   }
 
+  async create(input: CreateTourInput) {
+    // validate dates
+
+    if (input.startingDate >= input.endingDate) {
+      throw new BadRequestException('Invalid dates');
+    }
+
+    // validate name
+
+    const existingByName = await this.tourRepo.findOne({
+      name: input.name,
+    });
+
+    if (existingByName) {
+      throw new ConflictException('A tour with this name already exists');
+    }
+
+    const travel = await this.travelsService.findOne(input.travelId);
+
+    if (!travel) {
+      throw new NotFoundException(
+        `Travel with id "${input.travelId}" not found`,
+      );
+    }
+
+    // create and save
+
+    const tour = this.tourRepo.create({
+      ...input,
+      price: input.price * 100,
+    });
+
+    tour.travel = travel;
+
+    await this.tourRepo.persistAndFlush(tour);
+
+    return tour;
+  }
+
   async update(input: UpdateTourInput) {
     const tour = await this.tourRepo.findOne(input.id);
 
@@ -173,7 +177,7 @@ export class ToursService {
     // set price
 
     if (typeof input.price !== 'undefined') {
-      tour.price = input.price;
+      tour.price = input.price * 100;
     }
 
     // and finally save

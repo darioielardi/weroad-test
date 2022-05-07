@@ -9,6 +9,8 @@ TODO:
 - remove unnecessary unit tests
 - branding
 - delete travel
+- travel moods
+- error handling (codes + alerts)
 
 TO DOC:
 

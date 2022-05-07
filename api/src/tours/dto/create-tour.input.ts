@@ -1,7 +1,6 @@
-import { InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   IsDate,
-  IsDivisibleBy,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -26,9 +25,9 @@ export class CreateTourInput {
   @IsDate()
   endingDate: Date;
 
+  @Field(() => Int)
   @IsNumber()
   @IsInt()
   @Min(0)
-  @IsDivisibleBy(100)
   price: number;
 }

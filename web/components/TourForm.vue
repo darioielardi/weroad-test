@@ -62,7 +62,7 @@
         :min="startingDate"
         name="endingDate"
         placeholder="Ending date"
-        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md disabled:opacity-50"
       />
     </div>
   </form>
@@ -73,6 +73,11 @@ import Vue, { PropType } from 'vue';
 import { CreateTourInput } from '~/graphql/generated';
 
 type FormData = Omit<CreateTourInput, 'travelId'>;
+
+function formatDateString(value: string) {
+  const date = new Date(value);
+  return date.toISOString().split('T')[0];
+}
 
 export default Vue.extend({
   name: 'TourForm',
@@ -89,7 +94,7 @@ export default Vue.extend({
           name: '',
           startingDate: '',
           endingDate: '',
-          price: 1000,
+          price: 100000,
         };
       },
     },
@@ -102,19 +107,31 @@ export default Vue.extend({
   data() {
     return {
       name: this.initialData.name,
-      startingDate: this.initialData.startingDate,
-      endingDate: this.initialData.endingDate,
-      price: this.initialData.price,
+      startingDate: this.initialData.startingDate
+        ? formatDateString(this.initialData.startingDate)
+        : '',
+      endingDate: this.initialData.endingDate
+        ? formatDateString(this.initialData.endingDate)
+        : '',
+      price: this.initialData.price / 100,
     };
+  },
+
+  watch: {
+    startingDate(newValue) {
+      if (newValue === '' || new Date(newValue) > new Date(this.endingDate)) {
+        this.endingDate = '';
+      }
+    },
   },
 
   methods: {
     onSave() {
       this.save({
         name: this.name,
-        startingDate: this.initialData.startingDate,
-        endingDate: this.initialData.endingDate,
-        price: this.initialData.price,
+        startingDate: new Date(this.startingDate).toISOString(),
+        endingDate: new Date(this.endingDate).toISOString(),
+        price: this.price,
       });
     },
   },

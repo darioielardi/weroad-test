@@ -12,7 +12,7 @@
 
         <button
           type="submit"
-          form="edit-travel"
+          form="edit-tour"
           class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Save
@@ -27,7 +27,7 @@
 
       <div v-if="tour" class="card">
         <tour-form
-          form-id="edit-travel"
+          form-id="edit-tour"
           :save="save"
           :initial-data="{
             name: tour.name,
@@ -52,7 +52,7 @@ import {
 } from '~/graphql/generated';
 
 export default Vue.extend({
-  name: 'EditTravelPage',
+  name: 'EditTourPage',
   layout: 'app',
 
   data() {
