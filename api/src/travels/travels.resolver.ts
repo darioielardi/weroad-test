@@ -2,9 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
 import { Admin, Editor } from '../auth/roles.decorator';
-import { PaginationArgs } from '../common/pagination.args';
 import { CreateTravelInput } from './dto/create-travel.input';
-import { PaginatedTravels } from './dto/list-travels.input';
+import { FindTravelsArgs, PaginatedTravels } from './dto/list-travels.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 import { Travel } from './entities/travel.entity';
 import { TravelsService } from './travels.service';
@@ -16,7 +15,7 @@ export class TravelsResolver {
 
   @Public()
   @Query(() => PaginatedTravels, { name: 'travels' })
-  findAll(@Args() args: PaginationArgs, @CurrentUser() user: AuthUser | null) {
+  findAll(@Args() args: FindTravelsArgs, @CurrentUser() user: AuthUser | null) {
     return this.travelsService.findAll({
       publicOnly: user === null,
       ...args,

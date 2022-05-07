@@ -213,6 +213,13 @@
                   </tbody>
                 </table>
               </div>
+
+              <table-pagination
+                :page="page"
+                :rows="rows"
+                :total="tours.count"
+                @change="onPaginationChange"
+              />
             </div>
           </div>
         </div>
@@ -225,8 +232,6 @@
 import Vue from 'vue';
 import {
   DeleteTour,
-  DeleteTourMutation,
-  DeleteTourMutationVariables,
   DeleteTravel,
   ToursByTravel,
   ToursByTravelQuery,
@@ -245,6 +250,8 @@ export default Vue.extend({
     return {
       travel: null as TravelQuery['travel'] | null,
       tours: null as ToursByTravelQuery['toursByTravel'] | null,
+      rows: 5,
+      page: Number(this.$route.query.page || 0) || 1,
     };
   },
 
@@ -279,8 +286,8 @@ export default Vue.extend({
       variables(): ToursByTravelQueryVariables {
         return {
           travelSlug: this.travel!.slug,
-          limit: 5,
-          offset: 0,
+          rows: this.rows,
+          page: Number(this.$route.query.page || 0) || 1,
         };
       },
       update(data: ToursByTravelQuery): void {
@@ -289,6 +296,12 @@ export default Vue.extend({
       skip(): boolean {
         return !this.travel;
       },
+    },
+  },
+
+  watch: {
+    '$route.query.page'(page: string) {
+      this.page = Number(page) || 1;
     },
   },
 
@@ -334,10 +347,7 @@ export default Vue.extend({
 
     async deleteTour(tourId: string) {
       if (confirm('Do you really want to delete this tour?')) {
-        await this.$apollo.mutate<
-          DeleteTourMutation,
-          DeleteTourMutationVariables
-        >({
+        await this.$apollo.mutate({
           mutation: DeleteTour,
           variables: {
             id: tourId,
@@ -346,6 +356,15 @@ export default Vue.extend({
 
         await this.$apollo.queries.toursByTravel.refetch();
       }
+    },
+
+    onPaginationChange(page: number) {
+      this.$router.replace({
+        query: {
+          ...this.$route.query,
+          page: page === 1 ? '' : page.toString(),
+        },
+      });
     },
   },
 });

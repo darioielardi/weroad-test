@@ -80,13 +80,13 @@ export class ToursService {
 
     const [items, count] = await this.tourRepo.findAndCount(where, {
       orderBy,
-      limit: args.limit,
-      offset: args.offset,
+      limit: args.rows,
+      offset: args.rows * (args.page - 1),
     });
 
     return {
       items,
-      hasMore: count > args.offset + args.limit,
+      count,
     };
   }
 

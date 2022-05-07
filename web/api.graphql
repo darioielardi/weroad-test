@@ -1,7 +1,7 @@
 # travels
 
-query Travels($limit: Int!, $offset: Int!) {
-  travels(limit: $limit, offset: $offset) {
+query Travels($page: Int!, $rows: Int!, $searchTerm: String) {
+  travels(page: $page, rows: $rows, searchTerm: $searchTerm) {
     items {
       id
       name
@@ -9,7 +9,7 @@ query Travels($limit: Int!, $offset: Int!) {
       isPublic
       numberOfDays
     }
-    hasMore
+    count
   }
 }
 
@@ -47,8 +47,8 @@ mutation DeleteTravel($id: String!) {
 
 # tours
 
-query ToursByTravel($travelSlug: String!, $limit: Int!, $offset: Int!) {
-  toursByTravel(travelSlug: $travelSlug, limit: $limit, offset: $offset) {
+query ToursByTravel($travelSlug: String!, $page: Int!, $rows: Int!) {
+  toursByTravel(travelSlug: $travelSlug, page: $page, rows: $rows) {
     items {
       id
       name
@@ -56,7 +56,7 @@ query ToursByTravel($travelSlug: String!, $limit: Int!, $offset: Int!) {
       endingDate
       price
     }
-    hasMore
+    count
   }
 }
 

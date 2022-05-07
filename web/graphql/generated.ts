@@ -77,13 +77,13 @@ export type MutationUpdateTravelArgs = {
 
 export type PaginatedTours = {
   __typename?: 'PaginatedTours';
-  hasMore: Scalars['Boolean'];
+  count: Scalars['Int'];
   items: Array<Tour>;
 };
 
 export type PaginatedTravels = {
   __typename?: 'PaginatedTravels';
-  hasMore: Scalars['Boolean'];
+  count: Scalars['Int'];
   items: Array<Travel>;
 };
 
@@ -105,10 +105,10 @@ export type QueryTourArgs = {
 export type QueryToursByTravelArgs = {
   dateFrom?: InputMaybe<Scalars['DateTime']>;
   dateTo?: InputMaybe<Scalars['DateTime']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
   priceFrom?: InputMaybe<Scalars['Int']>;
   priceTo?: InputMaybe<Scalars['Int']>;
+  rows?: InputMaybe<Scalars['Int']>;
   sortBy?: InputMaybe<ToursSortBy>;
   travelSlug: Scalars['String'];
 };
@@ -120,8 +120,9 @@ export type QueryTravelArgs = {
 
 
 export type QueryTravelsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
+  rows?: InputMaybe<Scalars['Int']>;
+  searchTerm?: InputMaybe<Scalars['String']>;
 };
 
 export enum Role {
@@ -196,12 +197,13 @@ export type User = {
 };
 
 export type TravelsQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  page: Scalars['Int'];
+  rows: Scalars['Int'];
+  searchTerm?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type TravelsQuery = { __typename?: 'Query', travels: { __typename?: 'PaginatedTravels', hasMore: boolean, items: Array<{ __typename?: 'Travel', id: string, name: string, slug: string, isPublic: boolean, numberOfDays: number }> } };
+export type TravelsQuery = { __typename?: 'Query', travels: { __typename?: 'PaginatedTravels', count: number, items: Array<{ __typename?: 'Travel', id: string, name: string, slug: string, isPublic: boolean, numberOfDays: number }> } };
 
 export type TravelQueryVariables = Exact<{
   id: Scalars['String'];
@@ -233,12 +235,12 @@ export type DeleteTravelMutation = { __typename?: 'Mutation', deleteTravel: bool
 
 export type ToursByTravelQueryVariables = Exact<{
   travelSlug: Scalars['String'];
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  page: Scalars['Int'];
+  rows: Scalars['Int'];
 }>;
 
 
-export type ToursByTravelQuery = { __typename?: 'Query', toursByTravel: { __typename?: 'PaginatedTours', hasMore: boolean, items: Array<{ __typename?: 'Tour', id: string, name: string, startingDate: string, endingDate: string, price: number }> } };
+export type ToursByTravelQuery = { __typename?: 'Query', toursByTravel: { __typename?: 'PaginatedTours', count: number, items: Array<{ __typename?: 'Tour', id: string, name: string, startingDate: string, endingDate: string, price: number }> } };
 
 export type TourQueryVariables = Exact<{
   id: Scalars['String'];
@@ -270,8 +272,8 @@ export type DeleteTourMutation = { __typename?: 'Mutation', deleteTour: boolean 
 
 
 export const Travels = gql`
-    query Travels($limit: Int!, $offset: Int!) {
-  travels(limit: $limit, offset: $offset) {
+    query Travels($page: Int!, $rows: Int!, $searchTerm: String) {
+  travels(page: $page, rows: $rows, searchTerm: $searchTerm) {
     items {
       id
       name
@@ -279,7 +281,7 @@ export const Travels = gql`
       isPublic
       numberOfDays
     }
-    hasMore
+    count
   }
 }
     `;
@@ -320,8 +322,8 @@ export const DeleteTravel = gql`
 }
     `;
 export const ToursByTravel = gql`
-    query ToursByTravel($travelSlug: String!, $limit: Int!, $offset: Int!) {
-  toursByTravel(travelSlug: $travelSlug, limit: $limit, offset: $offset) {
+    query ToursByTravel($travelSlug: String!, $page: Int!, $rows: Int!) {
+  toursByTravel(travelSlug: $travelSlug, page: $page, rows: $rows) {
     items {
       id
       name
@@ -329,7 +331,7 @@ export const ToursByTravel = gql`
       endingDate
       price
     }
-    hasMore
+    count
   }
 }
     `;

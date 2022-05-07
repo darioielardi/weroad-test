@@ -9,18 +9,18 @@ export class PaginationArgs {
   @IsInt()
   @Min(1)
   @Max(100)
-  limit: number;
+  page: number;
 
   @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsInt()
   @Min(0)
-  offset: number;
+  rows: number;
 }
 
 export interface PaginatedResponse<T> {
   items: T[];
-  hasMore: boolean;
+  count: number;
 }
 
 export function Paginated<T>(classRef: Type<T>): Type<PaginatedResponse<T>> {
@@ -29,8 +29,8 @@ export function Paginated<T>(classRef: Type<T>): Type<PaginatedResponse<T>> {
     @Field(() => [classRef])
     items: T[];
 
-    @Field(() => Boolean)
-    hasMore: boolean;
+    @Field(() => Int)
+    count: number;
   }
 
   return PaginatedType as Type<PaginatedResponse<T>>;
