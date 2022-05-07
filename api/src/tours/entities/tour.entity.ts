@@ -1,4 +1,4 @@
-import { Check, Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { Cascade, Check, Entity, ManyToOne, Property } from '@mikro-orm/core';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../common/base.entity';
 import { Travel } from '../../travels/entities/travel.entity';
@@ -23,6 +23,6 @@ export class Tour extends BaseEntity {
   @Property({ columnType: 'int', check: 'price >= 0 AND price % 100 = 0' })
   price: number;
 
-  @ManyToOne(() => Travel)
+  @ManyToOne(() => Travel, { cascade: [Cascade.REMOVE] })
   travel: Travel;
 }

@@ -49,7 +49,10 @@ import {
   TravelQuery,
   TravelQueryVariables,
   UpdateTravel,
+  UpdateTravelMutation,
+  UpdateTravelMutationVariables,
 } from '~/graphql/generated';
+import { isApolloError } from '~/utils/errors';
 
 export default Vue.extend({
   name: 'EditTravelPage',
@@ -78,17 +81,29 @@ export default Vue.extend({
     },
 
     async save(data: CreateTravelInput) {
-      await this.$apollo.mutate({
-        mutation: UpdateTravel,
-        variables: {
-          data: {
-            ...data,
-            id: this.travel!.id,
+      try {
+        await this.$apollo.mutate<
+          UpdateTravelMutation,
+          UpdateTravelMutationVariables
+        >({
+          mutation: UpdateTravel,
+          variables: {
+            data: {
+              ...data,
+              id: this.travel!.id,
+            },
           },
-        },
-      });
+        });
 
-      this.$router.go(-1);
+        this.$router.go(-1);
+      } catch (error) {
+        if (isApolloError(error)) {
+          const errors = error.graphQLErrors.map((e) => e.message);
+          if (errors.includes('slug-already-exists')) {
+            alert('A travel with this slug already exists');
+          }
+        }
+      }
     },
   },
 });

@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { isApolloError } from '~/utils/errors';
 import {
   CreateTravel,
   CreateTravelInput,
@@ -47,15 +48,24 @@ export default Vue.extend({
     },
 
     async save(data: CreateTravelInput) {
-      const res = await this.$apollo.mutate<
-        CreateTravelMutation,
-        CreateTravelMutationVariables
-      >({
-        mutation: CreateTravel,
-        variables: { data },
-      });
+      try {
+        const res = await this.$apollo.mutate<
+          CreateTravelMutation,
+          CreateTravelMutationVariables
+        >({
+          mutation: CreateTravel,
+          variables: { data },
+        });
 
-      this.$router.replace(`/${res.data?.createTravel.id}`);
+        this.$router.replace(`/${res.data?.createTravel.id}`);
+      } catch (error) {
+        if (isApolloError(error)) {
+          const errors = error.graphQLErrors.map((e) => e.message);
+          if (errors.includes('slug-already-exists')) {
+            alert('A travel with this slug already exists');
+          }
+        }
+      }
     },
   },
 });
