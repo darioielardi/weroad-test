@@ -1,26 +1,22 @@
 import faker from '@faker-js/faker';
 import { EntityRepository } from '@mikro-orm/core';
-import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import bcrypt from 'bcrypt';
 import request from 'supertest';
 import { Role, User } from '../src/users/entities/user.entity';
-import { AppModule } from './../src/app.module';
+import { Teardown, testSetup } from './test-utils';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;
   let usersRepo: EntityRepository<User>;
+  let teardown: Teardown;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    ({ app, usersRepo, teardown } = await testSetup());
+  });
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-
-    usersRepo = app.get(getRepositoryToken(User));
+  afterEach(async () => {
+    await teardown();
   });
 
   describe('login', () => {
@@ -76,9 +72,5 @@ describe('Auth (e2e)', () => {
       expect(res.body.user.email).toBe(email);
       expect(res.body.user.role).toBe(Role.ADMIN);
     });
-  });
-
-  afterEach(async () => {
-    await app.close();
   });
 });

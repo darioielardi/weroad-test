@@ -1,31 +1,25 @@
 import { faker } from '@faker-js/faker';
 import { EntityRepository } from '@mikro-orm/core';
-import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { AppModule } from '../../src/app.module';
 import { Travel } from '../../src/travels/entities/travel.entity';
 import { Role, User } from '../../src/users/entities/user.entity';
+import { Teardown, testSetup } from '../test-utils';
 
 describe('Create Travel (e2e)', () => {
   let app: INestApplication;
   let usersRepo: EntityRepository<User>;
   let travelsRepo: EntityRepository<Travel>;
   let jwtService: JwtService;
+  let teardown: Teardown;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    ({ app, travelsRepo, usersRepo, jwtService, teardown } = await testSetup());
+  });
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-
-    usersRepo = app.get(getRepositoryToken(User));
-    travelsRepo = app.get(getRepositoryToken(Travel));
-    jwtService = app.get(JwtService);
+  afterEach(async () => {
+    await teardown();
   });
 
   test('requires auth', async () => {
@@ -134,9 +128,5 @@ describe('Create Travel (e2e)', () => {
         expect(travel.description).toBe(data.description);
         expect(travel.numberOfDays).toBe(data.numberOfDays);
       });
-  });
-
-  afterEach(async () => {
-    await app.close();
   });
 });

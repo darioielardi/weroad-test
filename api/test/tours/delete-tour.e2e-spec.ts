@@ -3,19 +3,22 @@ import { EntityRepository } from '@mikro-orm/core';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
+import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
 import { Role, User } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
-describe('Delete Travel (e2e)', () => {
+describe('Delete Tour (e2e)', () => {
   let app: INestApplication;
   let usersRepo: EntityRepository<User>;
   let travelsRepo: EntityRepository<Travel>;
+  let toursRepo: EntityRepository<Tour>;
   let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, usersRepo, jwtService, teardown } = await testSetup());
+    ({ app, travelsRepo, toursRepo, usersRepo, jwtService, teardown } =
+      await testSetup());
   });
 
   afterEach(async () => {
@@ -28,7 +31,7 @@ describe('Delete Travel (e2e)', () => {
       .send({
         query: `
             mutation {
-              deleteTravel(id: "${faker.datatype.uuid()}")
+              deleteTour(id: "${faker.datatype.uuid()}")
             }
           `,
       })
@@ -54,7 +57,7 @@ describe('Delete Travel (e2e)', () => {
       .send({
         query: `
             mutation {
-              deleteTravel(id: "${faker.datatype.uuid()}")
+              deleteTour(id: "${faker.datatype.uuid()}")
             }
           `,
       })
@@ -80,7 +83,7 @@ describe('Delete Travel (e2e)', () => {
       .send({
         query: `
             mutation {
-              deleteTravel(id: "${faker.datatype.uuid()}")
+              deleteTour(id: "${faker.datatype.uuid()}")
             }
           `,
       })
@@ -105,6 +108,14 @@ describe('Delete Travel (e2e)', () => {
       numberOfDays: faker.datatype.number(),
     });
 
+    const tourId = await toursRepo.nativeInsert({
+      name: faker.lorem.sentence(),
+      travel: travelId,
+      startingDate: new Date('2030-10-01'),
+      endingDate: new Date('2030-10-02'),
+      price: 1000,
+    });
+
     const token = jwtService.sign({ sub: adminId });
 
     await request(app.getHttpServer())
@@ -113,17 +124,17 @@ describe('Delete Travel (e2e)', () => {
       .send({
         query: `
             mutation {
-              deleteTravel(id: "${travelId}")
+              deleteTour(id: "${tourId}")
             }
           `,
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data).toEqual({ deleteTravel: true });
+        expect(res.body.data).toEqual({ deleteTour: true });
       });
 
-    const travel = await travelsRepo.findOne(travelId);
+    const tour = await toursRepo.findOne(tourId);
 
-    expect(travel).toBeNull();
+    expect(tour).toBeNull();
   });
 });

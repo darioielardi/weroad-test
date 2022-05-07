@@ -1,28 +1,23 @@
 import { faker } from '@faker-js/faker';
 import { EntityRepository } from '@mikro-orm/core';
-import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
-import { AppModule } from './../../src/app.module';
+import { Teardown, testSetup } from '../test-utils';
 
 describe('Find Tours (e2e)', () => {
   let app: INestApplication;
   let toursRepo: EntityRepository<Tour>;
   let travelsRepo: EntityRepository<Travel>;
+  let teardown: Teardown;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    ({ app, travelsRepo, toursRepo, teardown } = await testSetup());
+  });
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-
-    toursRepo = app.get(getRepositoryToken(Tour));
-    travelsRepo = app.get(getRepositoryToken(Travel));
+  afterEach(async () => {
+    await teardown();
   });
 
   describe('find tours by travel slug', () => {
@@ -45,9 +40,7 @@ describe('Find Tours (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.errors[0].extensions.code).toBe('404');
-          expect(res.body.errors[0].message).toBe(
-            `Travel with slug "${slug}" not found`,
-          );
+          expect(res.body.errors[0].message).toBe('travel-not-found');
         });
     });
 
@@ -79,9 +72,7 @@ describe('Find Tours (e2e)', () => {
         .expect((res) => {
           expect(res.body.data).toBeNull();
           expect(res.body.errors[0].extensions.code).toBe('404');
-          expect(res.body.errors[0].message).toBe(
-            `Travel with slug "${slug}" not found`,
-          );
+          expect(res.body.errors[0].message).toBe('travel-not-found');
         });
     });
 
@@ -278,9 +269,5 @@ describe('Find Tours (e2e)', () => {
           expect(res.body.data.toursByTravel.items[1].id).toBe(toursIds[0]);
         });
     });
-  });
-
-  afterEach(async () => {
-    await app.close();
   });
 });
