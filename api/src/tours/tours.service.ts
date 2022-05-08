@@ -183,7 +183,7 @@ export class ToursService {
     return tour;
   }
 
-  async remove(id: string) {
+  async delete(id: string) {
     const tour = await this.tourRepo.findOne(id);
 
     if (!tour) {

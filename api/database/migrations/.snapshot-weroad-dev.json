@@ -273,7 +273,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "uuid"
         }
       },
@@ -323,7 +323,7 @@
             "id"
           ],
           "referencedTableName": "public.travel",
-          "deleteRule": "cascade"
+          "updateRule": "cascade"
         }
       }
     },

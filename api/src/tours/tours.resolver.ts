@@ -43,7 +43,7 @@ export class ToursResolver {
   @Admin()
   @Mutation(() => Boolean)
   async deleteTour(@Args('id', { type: () => String }) id: string) {
-    await this.toursService.remove(id);
+    await this.toursService.delete(id);
     return true;
   }
 }

@@ -1,4 +1,10 @@
-import { Collection, Entity, OneToMany, Property } from '@mikro-orm/core';
+import {
+  Cascade,
+  Collection,
+  Entity,
+  OneToMany,
+  Property,
+} from '@mikro-orm/core';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../common/base.entity';
 import { Tour } from '../../tours/entities/tour.entity';
@@ -27,7 +33,7 @@ export class Travel extends BaseEntity {
   }
 
   @Field(() => [Tour])
-  @OneToMany(() => Tour, (tour) => tour.travel)
+  @OneToMany(() => Tour, (tour) => tour.travel, { cascade: [Cascade.REMOVE] })
   tours = new Collection<Tour>(this);
 
   // moods
