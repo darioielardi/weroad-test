@@ -86,7 +86,8 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'IndexPage',
+  name: 'LoginPage',
+
   data() {
     return {
       isLoading: false,
@@ -96,6 +97,7 @@ export default Vue.extend({
       },
     };
   },
+
   methods: {
     async onLogin() {
       this.isLoading = true;

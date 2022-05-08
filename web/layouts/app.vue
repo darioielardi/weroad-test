@@ -19,10 +19,10 @@
             </div>
 
             <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-              <a
+              <nuxt-link
                 v-for="item in navigation"
                 :key="item.name"
-                :href="item.href"
+                :to="item.href"
                 :class="[
                   item.current
                     ? 'border-brand text-gray-900'
@@ -30,7 +30,7 @@
                   'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium',
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
-                >{{ item.name }}</a
+                >{{ item.name }}</nuxt-link
               >
             </div>
           </div>
@@ -58,11 +58,11 @@
 import Vue from 'vue';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: 'Dashboard', href: '/', current: true },
+  { name: 'Team', href: '#' },
+  { name: 'Projects', href: '#' },
+  { name: 'Calendar', href: '#' },
+  { name: 'Reports', href: '#' },
 ];
 
 export default Vue.extend({

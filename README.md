@@ -12,6 +12,7 @@ TO DOC:
 - nuxtjs spa + static
 - auth flow
 - auth has rest endpoints for simplicity ( and nuxt/auth integration ), but we can implement as gql ops if needed
+- testing
 
 ## Setup
 

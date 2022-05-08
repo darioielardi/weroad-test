@@ -42,6 +42,7 @@
         v-model.number="numberOfDays"
         required
         type="number"
+        min="1"
         name="numberOfDays"
         placeholder="Number of days"
         class="mt-1 focus:ring-brand focus:border-brand block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
