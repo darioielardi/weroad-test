@@ -13,9 +13,10 @@ import { User } from '../src/users/entities/user.entity';
 // we need DATABASE_URL beforehand to initialize the ORM, so we need to load it manually
 dotenv.config({ path: '.env.test' });
 
-export async function testSetup() {
+// we can set a schema prefix to identify the schema afterwards
+export async function testSetup(schemaPrefix?: string, dropSchema = true) {
   // every test needs a fresh db schema
-  const schema = faker.datatype.uuid();
+  const schema = (schemaPrefix || '') + faker.datatype.uuid();
 
   const orm = await MikroORM.init({
     entities: ormConfig.entities,
@@ -35,9 +36,11 @@ export async function testSetup() {
   await app.init();
 
   async function teardown() {
-    const conn = orm.em.getConnection();
-    await conn.execute(`DROP SCHEMA "${schema}" CASCADE;`);
-    await conn.close();
+    if (dropSchema) {
+      const conn = orm.em.getConnection();
+      await conn.execute(`DROP SCHEMA "${schema}" CASCADE;`);
+      await conn.close();
+    }
 
     await orm.close();
     await app.close();
