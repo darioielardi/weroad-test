@@ -1,11 +1,12 @@
 version: "3"
 services:
-  postgres:
-    container_name: weroad-dev-postgres
-    image: postgres:latest
+  dev-db:
+    container_name: weroad-db-dev
+    image: postgres:14
     ports:
       - "5432:5432"
     volumes:
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=postgres
