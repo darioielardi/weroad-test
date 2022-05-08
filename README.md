@@ -1,4 +1,4 @@
-# WeRoad Application Test
+# WeRoad Technical Test Project
 
 This is my submission for the WeRoad technical test project.
 
