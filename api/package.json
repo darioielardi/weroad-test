@@ -9,7 +9,7 @@
     "dev": "yarn start:dev",
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "db:migrate": "mikro-orm migration:run",
+    "db:migrate": "mikro-orm migration:up",
     "db:seed": "mikro-orm seeder:run",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
