@@ -20,7 +20,7 @@ import { Tour } from './entities/tour.entity';
 export class ToursService {
   constructor(
     @InjectRepository(Tour)
-    private readonly tourRepo: EntityRepository<Tour>,
+    private tourRepo: EntityRepository<Tour>,
     private travelsService: TravelsService,
   ) {}
 

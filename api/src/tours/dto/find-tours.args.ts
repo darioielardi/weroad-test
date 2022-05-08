@@ -5,12 +5,13 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { IsDate, IsInt, IsNumber, IsOptional } from 'class-validator';
+import { IsDate, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Paginated, PaginationArgs } from '../../common/pagination.args';
 import { Tour } from '../entities/tour.entity';
 
 @ArgsType()
 export class FindToursArgs extends PaginationArgs {
+  @IsString()
   travelSlug: string;
 
   // filters

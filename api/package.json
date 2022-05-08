@@ -9,6 +9,8 @@
     "dev": "yarn start:dev",
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "db:migrate": "mikro-orm migration:run",
+    "db:seed": "mikro-orm seeder:run",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -20,7 +22,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json --maxWorkers=5"
+    "test:e2e": "jest --config ./test/jest-e2e.json --maxWorkers=3"
   },
   "dependencies": {
     "@mikro-orm/core": "^5.1.3",

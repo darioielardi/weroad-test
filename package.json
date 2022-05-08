@@ -19,6 +19,8 @@
   },
   "scripts": {
     "api": "yarn workspace @weroad/api",
-    "web": "yarn workspace @weroad/web"
+    "web": "yarn workspace @weroad/web",
+    "db:migrate": "yarn api db:migrate",
+    "db:seed": "yarn api db:seed --class=\"MainSeeder\""
   }
 }
