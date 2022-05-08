@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Role } from '../users/entities/user.entity';
 import { ROLES_KEY } from './auth.constants';
+import { AuthUser } from './auth.types';
 
 @Injectable()
 export class GqlRolesGuard implements CanActivate {
@@ -18,7 +19,8 @@ export class GqlRolesGuard implements CanActivate {
       return true;
     }
 
-    const { user } = GqlExecutionContext.create(context).getContext().req;
+    const user: AuthUser =
+      GqlExecutionContext.create(context).getContext().req.user;
 
     return requiredRoles.some((role) => user?.role === role);
   }

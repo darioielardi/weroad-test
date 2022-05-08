@@ -141,7 +141,7 @@ export class ToursService {
     const tour = await this.tourRepo.findOne(input.id);
 
     if (!tour) {
-      throw new NotFoundException(`Tour with id "${input.id}" not found`);
+      throw new NotFoundException('tour-not-found');
     }
 
     // validate & set dates
@@ -150,7 +150,7 @@ export class ToursService {
     const finalEndingDate = input.endingDate || tour.endingDate;
 
     if (finalStartingDate >= finalEndingDate) {
-      throw new BadRequestException('Invalid dates');
+      throw new BadRequestException('invalid-dates');
     }
 
     tour.startingDate = finalStartingDate;

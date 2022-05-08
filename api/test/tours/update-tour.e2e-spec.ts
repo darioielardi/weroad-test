@@ -5,20 +5,18 @@ import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
-import { Role, User } from '../../src/users/entities/user.entity';
+import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
 describe('Update Tour (e2e)', () => {
   let app: INestApplication;
   let toursRepo: EntityRepository<Tour>;
   let travelsRepo: EntityRepository<Travel>;
-  let usersRepo: EntityRepository<User>;
   let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, toursRepo, usersRepo, jwtService, teardown } =
-      await testSetup());
+    ({ app, travelsRepo, toursRepo, jwtService, teardown } = await testSetup());
   });
 
   afterEach(async () => {
@@ -50,13 +48,10 @@ describe('Update Tour (e2e)', () => {
   });
 
   test('tour not found', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.ADMIN,
     });
-
-    const token = jwtService.sign({ sub: adminId });
 
     const tourId = faker.datatype.uuid();
 
@@ -81,20 +76,15 @@ describe('Update Tour (e2e)', () => {
       .expect((res) => {
         expect(res.body.data).toBeNull();
         expect(res.body.errors[0].extensions.code).toBe('404');
-        expect(res.body.errors[0].message).toBe(
-          `Tour with id "${tourId}" not found`,
-        );
+        expect(res.body.errors[0].message).toBe('tour-not-found');
       });
   });
 
   test('success (editor)', async () => {
-    const editorId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.EDITOR,
     });
-
-    const token = jwtService.sign({ sub: editorId });
 
     const travelId = await travelsRepo.nativeInsert({
       name: faker.lorem.sentence(),

@@ -1,19 +1,22 @@
 import { faker } from '@faker-js/faker';
 import { EntityRepository } from '@mikro-orm/core';
 import { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
+import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
 describe('Find Tours (e2e)', () => {
   let app: INestApplication;
   let toursRepo: EntityRepository<Tour>;
   let travelsRepo: EntityRepository<Travel>;
+  let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, toursRepo, teardown } = await testSetup());
+    ({ app, travelsRepo, toursRepo, jwtService, teardown } = await testSetup());
   });
 
   afterEach(async () => {
@@ -29,7 +32,7 @@ describe('Find Tours (e2e)', () => {
         .send({
           query: `
             query {
-              toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0) {
+              toursByTravel(travelSlug: "${slug}", page: 1, rows: 100) {
                 items {
                   id
                 }
@@ -44,36 +47,75 @@ describe('Find Tours (e2e)', () => {
         });
     });
 
-    test('travel is not public', async () => {
-      const slug = faker.random.alpha(100);
+    describe('travel is not public', () => {
+      it('fails if no auth', async () => {
+        const slug = faker.random.alpha(100);
 
-      await travelsRepo.nativeInsert({
-        isPublic: false,
-        slug,
-        name: faker.random.alpha(100),
-        description: 'Private travel description',
-        numberOfDays: 10,
+        await travelsRepo.nativeInsert({
+          isPublic: false,
+          slug,
+          name: faker.random.alpha(100),
+          description: 'Private travel description',
+          numberOfDays: 10,
+        });
+
+        return request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            query: `
+              query {
+                toursByTravel(travelSlug: "${slug}", page: 1, rows: 100) {
+                  items {
+                    id
+                  }
+                }
+              }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data).toBeNull();
+            expect(res.body.errors[0].extensions.code).toBe('404');
+            expect(res.body.errors[0].message).toBe('travel-not-found');
+          });
       });
 
-      return request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          query: `
+      it('works if auth', async () => {
+        const slug = faker.random.alpha(100);
+
+        await travelsRepo.nativeInsert({
+          isPublic: false,
+          slug,
+          name: faker.random.alpha(100),
+          description: 'Private travel description',
+          numberOfDays: 10,
+        });
+
+        const token = jwtService.sign({
+          sub: faker.datatype.uuid(),
+          role: Role.EDITOR,
+        });
+
+        return request(app.getHttpServer())
+          .post('/graphql')
+          .auth(token, { type: 'bearer' })
+          .send({
+            query: `
             query {
-              toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0) {
+              toursByTravel(travelSlug: "${slug}", page: 1, rows: 100) {
                 items {
                   id
                 }
               }
             }
           `,
-        })
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.data).toBeNull();
-          expect(res.body.errors[0].extensions.code).toBe('404');
-          expect(res.body.errors[0].message).toBe('travel-not-found');
-        });
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data).toBeDefined();
+            expect(res.body.errors).toBeUndefined();
+          });
+      });
     });
 
     it('works without filters + default sort by (starting date)', async () => {
@@ -109,7 +151,7 @@ describe('Find Tours (e2e)', () => {
         .send({
           query: `
             query {
-              toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0) {
+              toursByTravel(travelSlug: "${slug}", page: 1, rows: 100) {
                 items {
                   id
                 }
@@ -158,7 +200,7 @@ describe('Find Tours (e2e)', () => {
         .send({
           query: `
             query {
-              toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0, priceFrom: 500, priceTo: 1500) {
+              toursByTravel(travelSlug: "${slug}", page: 1, rows: 100, priceFrom: 500, priceTo: 1500) {
                 items {
                   id
                 }
@@ -206,7 +248,7 @@ describe('Find Tours (e2e)', () => {
         .send({
           query: `
             query {
-              toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0, dateFrom: "2030-01-15", dateTo: "2030-03-10") {
+              toursByTravel(travelSlug: "${slug}", page: 1, rows: 100, dateFrom: "2030-01-15", dateTo: "2030-03-10") {
                 items {
                   id
                 }
@@ -254,7 +296,7 @@ describe('Find Tours (e2e)', () => {
         .send({
           query: `
             query {
-              toursByTravel(travelSlug: "${slug}", limit: 10, offset: 0, sortBy: PRICE_ASC) {
+              toursByTravel(travelSlug: "${slug}", page: 1, rows: 100, sortBy: PRICE_ASC) {
                 items {
                   id
                 }

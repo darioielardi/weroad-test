@@ -4,18 +4,17 @@ import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import { Travel } from '../../src/travels/entities/travel.entity';
-import { Role, User } from '../../src/users/entities/user.entity';
+import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
 describe('Delete Travel (e2e)', () => {
   let app: INestApplication;
-  let usersRepo: EntityRepository<User>;
   let travelsRepo: EntityRepository<Travel>;
   let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, usersRepo, jwtService, teardown } = await testSetup());
+    ({ app, travelsRepo, jwtService, teardown } = await testSetup());
   });
 
   afterEach(async () => {
@@ -40,13 +39,10 @@ describe('Delete Travel (e2e)', () => {
   });
 
   test('forbidden to editor', async () => {
-    const editorId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.EDITOR,
     });
-
-    const token = jwtService.sign({ sub: editorId });
 
     return request(app.getHttpServer())
       .post('/graphql')
@@ -66,13 +62,10 @@ describe('Delete Travel (e2e)', () => {
   });
 
   test('not found', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.ADMIN,
     });
-
-    const token = jwtService.sign({ sub: adminId });
 
     return request(app.getHttpServer())
       .post('/graphql')
@@ -92,12 +85,6 @@ describe('Delete Travel (e2e)', () => {
   });
 
   test('success', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-      role: Role.ADMIN,
-    });
-
     const travelId = await travelsRepo.nativeInsert({
       name: faker.lorem.sentence(),
       description: faker.lorem.sentences(),
@@ -105,7 +92,10 @@ describe('Delete Travel (e2e)', () => {
       numberOfDays: faker.datatype.number(),
     });
 
-    const token = jwtService.sign({ sub: adminId });
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
+      role: Role.ADMIN,
+    });
 
     await request(app.getHttpServer())
       .post('/graphql')

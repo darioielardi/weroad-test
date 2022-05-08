@@ -2,19 +2,25 @@ import faker from '@faker-js/faker';
 import { MikroORM } from '@mikro-orm/core';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import dotenv from 'dotenv';
 import ormConfig from '../mikro-orm.config';
 import { AppModule } from '../src/app.module';
 import { Tour } from '../src/tours/entities/tour.entity';
 import { Travel } from '../src/travels/entities/travel.entity';
 import { User } from '../src/users/entities/user.entity';
 
+// we can't wait for @nestjs/config to load the env,
+// we need DATABASE_URL beforehand to initialize the ORM, so we need to load it manually
+dotenv.config({ path: '.env.test' });
+
 export async function testSetup() {
+  // every test needs a fresh db schema
   const schema = faker.datatype.uuid();
 
   const orm = await MikroORM.init({
     entities: ormConfig.entities,
     type: 'postgresql',
-    clientUrl: `postgres://postgres:secret@localhost:5432/weroad-test`,
+    clientUrl: process.env.DATABASE_URL,
     schema,
   });
 

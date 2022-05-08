@@ -5,20 +5,18 @@ import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
-import { Role, User } from '../../src/users/entities/user.entity';
+import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
 describe('Create Tour (e2e)', () => {
   let app: INestApplication;
   let toursRepo: EntityRepository<Tour>;
   let travelsRepo: EntityRepository<Travel>;
-  let usersRepo: EntityRepository<User>;
   let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, toursRepo, usersRepo, jwtService, teardown } =
-      await testSetup());
+    ({ app, travelsRepo, toursRepo, jwtService, teardown } = await testSetup());
   });
 
   afterEach(async () => {
@@ -54,13 +52,10 @@ describe('Create Tour (e2e)', () => {
   });
 
   test('forbidden to editor', async () => {
-    const editorId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.EDITOR,
     });
-
-    const token = jwtService.sign({ sub: editorId });
 
     return request(app.getHttpServer())
       .post('/graphql')
@@ -91,13 +86,10 @@ describe('Create Tour (e2e)', () => {
   });
 
   test('travel not found', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.ADMIN,
     });
-
-    const token = jwtService.sign({ sub: adminId });
 
     const travelId = faker.datatype.uuid();
 
@@ -131,13 +123,10 @@ describe('Create Tour (e2e)', () => {
   });
 
   test('success', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.ADMIN,
     });
-
-    const token = jwtService.sign({ sub: adminId });
 
     const travelId = await travelsRepo.nativeInsert({
       name: faker.lorem.sentence(),

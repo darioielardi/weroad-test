@@ -15,6 +15,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     MikroOrmModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({

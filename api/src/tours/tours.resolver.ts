@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Auth, CurrentUser, Public } from '../auth/auth.decorators';
+import { CurrentUser, Public, UseAuthGuards } from '../auth/auth.decorators';
 import { AuthUser } from '../auth/auth.types';
 import { Admin, Editor } from '../auth/roles.decorator';
 import { CreateTourInput } from './dto/create-tour.input';
@@ -8,7 +8,7 @@ import { UpdateTourInput } from './dto/update-tour.input';
 import { Tour } from './entities/tour.entity';
 import { ToursService } from './tours.service';
 
-@Auth()
+@UseAuthGuards()
 @Resolver(() => Tour)
 export class ToursResolver {
   constructor(private readonly toursService: ToursService) {}
@@ -22,6 +22,7 @@ export class ToursResolver {
     return this.toursService.findByTravel(args, user === null);
   }
 
+  @Editor()
   @Query(() => Tour, { name: 'tour' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.toursService.findOne(id);

@@ -4,18 +4,17 @@ import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import { Travel } from '../../src/travels/entities/travel.entity';
-import { Role, User } from '../../src/users/entities/user.entity';
+import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
 describe('Create Travel (e2e)', () => {
   let app: INestApplication;
-  let usersRepo: EntityRepository<User>;
   let travelsRepo: EntityRepository<Travel>;
   let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, usersRepo, jwtService, teardown } = await testSetup());
+    ({ app, travelsRepo, jwtService, teardown } = await testSetup());
   });
 
   afterEach(async () => {
@@ -50,13 +49,10 @@ describe('Create Travel (e2e)', () => {
   });
 
   test('forbidden to editor', async () => {
-    const editorId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.EDITOR,
     });
-
-    const token = jwtService.sign({ sub: editorId });
 
     return request(app.getHttpServer())
       .post('/graphql')
@@ -86,13 +82,10 @@ describe('Create Travel (e2e)', () => {
   });
 
   test('success', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.ADMIN,
     });
-
-    const token = jwtService.sign({ sub: adminId });
 
     const data = {
       name: faker.lorem.sentence(),

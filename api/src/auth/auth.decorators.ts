@@ -1,5 +1,4 @@
 import {
-  applyDecorators,
   createParamDecorator,
   ExecutionContext,
   SetMetadata,
@@ -19,6 +18,6 @@ export const CurrentUser = createParamDecorator(
 
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
-export function Auth() {
-  return applyDecorators(UseGuards(GqlAuthGuard, GqlRolesGuard));
+export function UseAuthGuards() {
+  return UseGuards(GqlAuthGuard, GqlRolesGuard);
 }

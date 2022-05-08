@@ -79,16 +79,23 @@ const config: NuxtConfig = {
   auth: {
     strategies: {
       local: {
+        scheme: 'refresh',
         token: {
           property: 'access_token',
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
         },
         user: {
           property: false,
         },
         endpoints: {
           login: { url: '/auth/login', method: 'post' },
-          logout: { url: '/auth/logout', method: 'post' },
+          refresh: { url: '/auth/refresh', method: 'post' },
           user: { url: '/auth/user', method: 'get' },
+          logout: { url: '/auth/logout', method: 'post' },
         },
       },
     },

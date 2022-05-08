@@ -1,10 +1,10 @@
 import { Query, Resolver } from '@nestjs/graphql';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { Auth, CurrentUser } from './auth.decorators';
+import { CurrentUser, UseAuthGuards } from './auth.decorators';
 import { AuthUser } from './auth.types';
 
-@Auth()
+@UseAuthGuards()
 @Resolver()
 export class AuthResolver {
   constructor(private usersService: UsersService) {}

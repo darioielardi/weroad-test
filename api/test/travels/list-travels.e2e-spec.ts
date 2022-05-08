@@ -5,20 +5,18 @@ import { JwtService } from '@nestjs/jwt';
 import request from 'supertest';
 import { Tour } from '../../src/tours/entities/tour.entity';
 import { Travel } from '../../src/travels/entities/travel.entity';
-import { Role, User } from '../../src/users/entities/user.entity';
+import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
 describe('List Travel (e2e)', () => {
   let app: INestApplication;
-  let usersRepo: EntityRepository<User>;
   let travelsRepo: EntityRepository<Travel>;
   let toursRepo: EntityRepository<Tour>;
   let jwtService: JwtService;
   let teardown: Teardown;
 
   beforeEach(async () => {
-    ({ app, travelsRepo, toursRepo, usersRepo, jwtService, teardown } =
-      await testSetup());
+    ({ app, travelsRepo, toursRepo, jwtService, teardown } = await testSetup());
   });
 
   afterEach(async () => {
@@ -48,7 +46,7 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels(limit: 100, offset: 0) {
+              travels(page: 1, rows: 100) {
                 items {
                   id
                 }
@@ -64,13 +62,10 @@ describe('List Travel (e2e)', () => {
   });
 
   it('returns all travels when auth', async () => {
-    const adminId = await usersRepo.nativeInsert({
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+    const token = jwtService.sign({
+      sub: faker.datatype.uuid(),
       role: Role.ADMIN,
     });
-
-    const token = jwtService.sign({ sub: adminId });
 
     await Promise.all([
       travelsRepo.nativeInsert({
@@ -95,7 +90,7 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels(limit: 100, offset: 0) {
+              travels(page: 1, rows: 100) {
                 items {
                   id
                 }
@@ -131,7 +126,7 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels(limit: 100, offset: 0) {
+              travels(page: 1, rows: 100) {
                 items {
                   id
                   tours {
