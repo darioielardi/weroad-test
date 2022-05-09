@@ -8,7 +8,7 @@ import { Travel } from '../../src/travels/entities/travel.entity';
 import { Role } from '../../src/users/entities/user.entity';
 import { Teardown, testSetup } from '../test-utils';
 
-describe('List Travel (e2e)', () => {
+describe('Find Travels (e2e)', () => {
   let app: INestApplication;
   let travelsRepo: EntityRepository<Travel>;
   let toursRepo: EntityRepository<Tour>;
@@ -24,29 +24,20 @@ describe('List Travel (e2e)', () => {
   });
 
   it('returns only public travels when no auth', async () => {
-    const [publicTravelId] = await Promise.all([
-      travelsRepo.nativeInsert({
-        name: faker.name.findName(),
-        slug: faker.lorem.slug(),
-        description: faker.lorem.sentence(),
-        numberOfDays: faker.datatype.number(),
-        isPublic: true,
-      }),
-      travelsRepo.nativeInsert({
-        name: faker.name.findName(),
-        slug: faker.lorem.slug(),
-        description: faker.lorem.sentence(),
-        numberOfDays: faker.datatype.number(),
-        isPublic: false,
-      }),
-    ]);
+    const privateTravelId = await travelsRepo.nativeInsert({
+      name: faker.name.findName(),
+      slug: faker.lorem.slug(),
+      description: faker.lorem.sentence(),
+      numberOfDays: faker.datatype.number(),
+      isPublic: false,
+    });
 
     return request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: `
             query {
-              travels(page: 1, rows: 100) {
+              travels(page: 1, rows: 1000) {
                 items {
                   id
                 }
@@ -56,8 +47,9 @@ describe('List Travel (e2e)', () => {
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.travels.items).toHaveLength(1);
-        expect(res.body.data.travels.items[0].id).toBe(publicTravelId);
+        expect(
+          res.body.data.travels.items.map((item) => item.id),
+        ).not.toContain(privateTravelId);
       });
   });
 
@@ -67,22 +59,13 @@ describe('List Travel (e2e)', () => {
       role: Role.ADMIN,
     });
 
-    await Promise.all([
-      travelsRepo.nativeInsert({
-        name: faker.name.findName(),
-        slug: faker.lorem.slug(),
-        description: faker.lorem.sentence(),
-        numberOfDays: faker.datatype.number(),
-        isPublic: true,
-      }),
-      travelsRepo.nativeInsert({
-        name: faker.name.findName(),
-        slug: faker.lorem.slug(),
-        description: faker.lorem.sentence(),
-        numberOfDays: faker.datatype.number(),
-        isPublic: false,
-      }),
-    ]);
+    const privateTravelId = await travelsRepo.nativeInsert({
+      name: faker.name.findName(),
+      slug: faker.lorem.slug(),
+      description: faker.lorem.sentence(),
+      numberOfDays: faker.datatype.number(),
+      isPublic: true,
+    });
 
     return request(app.getHttpServer())
       .post('/graphql')
@@ -90,7 +73,7 @@ describe('List Travel (e2e)', () => {
       .send({
         query: `
             query {
-              travels(page: 1, rows: 100) {
+              travels(page: 1, rows: 1000) {
                 items {
                   id
                 }
@@ -100,7 +83,9 @@ describe('List Travel (e2e)', () => {
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.travels.items).toHaveLength(2);
+        expect(res.body.data.travels.items.map((item) => item.id)).toContain(
+          privateTravelId,
+        );
       });
   });
 
@@ -139,9 +124,13 @@ describe('List Travel (e2e)', () => {
       })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.travels.items).toHaveLength(1);
-        expect(res.body.data.travels.items[0].tours).toHaveLength(1);
-        expect(res.body.data.travels.items[0].tours[0].id).toBe(tourId);
+        const travel = res.body.data.travels.items.find(
+          (item) => item.id === travelId,
+        );
+
+        expect(travel).toBeDefined();
+        expect(travel.tours).toHaveLength(1);
+        expect(travel.tours[0].id).toBe(tourId);
       });
   });
 });

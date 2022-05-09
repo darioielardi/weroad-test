@@ -63,8 +63,14 @@ export class TravelsService {
     };
   }
 
-  findOne(id: string) {
-    return this.travelRepo.findOne(id);
+  async findOne(id: string) {
+    const travel = await this.travelRepo.findOne(id);
+
+    if (!travel) {
+      throw new NotFoundException(`travel-not-found`);
+    }
+
+    return travel;
   }
 
   findBySlug(slug: string) {

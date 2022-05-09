@@ -38,11 +38,11 @@ the password is: `password`
 
 The api server comes with a complete end-to-end tests suite. I think a properly managed e2e tests suite is enough for a project of this size and complexity, which is why there are no unit or integration tests.
 
-When run, every test creates a dedicated schema in the test database, to test everything in isolation. The schema gets dropped after the test execution.
-
 To run the e2e tests suite, use the command NestJS set up for us: `yarn api test:e2e`.
 
-Tests are run with a `maxWorkers` lock option set to 3 for performance reasons.
+A global `test/setup.js` script is executed by jest to setup and clean the test database and load the `.env.test` file before all tests run.
+
+Tests are run with a `maxWorkers` lock option set to 5 for performance reasons.
 
 ## Notes
 
