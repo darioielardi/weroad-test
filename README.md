@@ -42,7 +42,7 @@ To run the e2e tests suite, use the command NestJS set up for us: `yarn api test
 
 A global `test/setup.js` script is executed by jest to setup and clean the test database and load the `.env.test` file before all tests run.
 
-Tests are run with a `maxWorkers` lock option set to 5 for performance reasons.
+Tests are run with a `maxWorkers` lock option set to 3 for performance reasons.
 
 ## Notes
 
